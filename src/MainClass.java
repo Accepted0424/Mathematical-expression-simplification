@@ -1,4 +1,5 @@
 import expr.Expr;
+import tools.Operate;
 
 import java.util.Scanner;
 import java.util.regex.Pattern;
@@ -8,11 +9,9 @@ public class MainClass {
         Scanner sc = new Scanner(System.in);
         String input = sc.nextLine();
         String s = Pattern.compile("[ \\t]").matcher(input).replaceAll("");
-        s = Pattern.compile("-").matcher(s).replaceAll("+-");
+        s = Operate.mergeSymbol(s);
 
         Expr expr = new Expr(s);
-
         System.out.println(expr);
-
     }
 }

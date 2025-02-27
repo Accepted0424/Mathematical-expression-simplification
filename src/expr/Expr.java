@@ -3,9 +3,10 @@ package expr;
 import tools.Operate;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class Expr implements MonoArrayConvertible {
-    private final String expr;
+    private String expr;
     private ArrayList<Term> terms = new ArrayList<>();
 
     public Expr(String expr) {
@@ -15,6 +16,10 @@ public class Expr implements MonoArrayConvertible {
 
     public ArrayList<Term> extractTerms() {
         //以不被括号包裹的+为分界线提取term
+
+        //便于以加号分割term
+        expr = Pattern.compile("-").matcher(expr).replaceAll("+-");
+
         boolean escaped = true; //是否在括号外
         int start = 0;
         for (int i = 0; i < expr.length(); i++) {
@@ -30,10 +35,15 @@ public class Expr implements MonoArrayConvertible {
                 //subString函数是[x,y)的
                 if (ch == '+') {
                     String subString = expr.substring(start, i);
-                    //针对+-的情况
+                    //针对+-开头的情况
                     if (subString.isEmpty()) {
                         continue;
                     }
+                    //针对“+5*+-07”的情况
+                    if (i > 1 && (expr.charAt(i - 1) == '*' || expr.charAt(i - 1) == '^')) {
+                        continue;
+                    }
+
                     start = i + 1;
                     terms.add(new Term(subString));
                 }

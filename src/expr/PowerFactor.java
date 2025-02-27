@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 public class PowerFactor extends Factor {
     //带x的均为变量因子
     //example: x x^2
-    private static final String patternTerm = "([+-]{0,2})x\\^?(\\d+)?";
+    private static final String patternTerm = "([+-]{0,2})x\\^?\\+?(\\d+)?";
     public static final Pattern re = Pattern.compile(patternTerm);
 
     public PowerFactor(String factor) {

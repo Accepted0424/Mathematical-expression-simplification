@@ -11,7 +11,8 @@ public class Term implements MonoArrayConvertible {
     private boolean isNegative;
 
     public Term(String term) {
-        this.term = term;
+        //化简重复+-再赋值
+        this.term = Operate.mergeSymbol(term);
         this.isNegative = false;
         this.factors = extractFactors();
     }
@@ -48,7 +49,7 @@ public class Term implements MonoArrayConvertible {
                     factors.add(FactorFactory.getFactor(subString));
                 }
                 if (i == term.length() - 1) {
-                    String subString = term.substring(start, i+1);
+                    String subString = term.substring(start, i + 1);
                     factors.add(FactorFactory.getFactor(subString));
                 }
             }

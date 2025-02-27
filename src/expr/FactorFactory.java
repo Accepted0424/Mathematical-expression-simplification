@@ -4,9 +4,9 @@ import java.util.regex.Pattern;
 
 public class FactorFactory {
     public static Factor getFactor(String s) {
-        Pattern constRe = Pattern.compile("\\+?-?\\d+");
-        Pattern exprRe = Pattern.compile("-?\\(([^)]+)\\)\\^?(\\d+)?");
-        Pattern powerRe = Pattern.compile("(\\+?\\-?)x\\^?(\\d+)?");
+        Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
+        Pattern exprRe = Pattern.compile("[+-]?\\(([^)]+)\\)\\^?\\+?(\\d+)?");
+        Pattern powerRe = Pattern.compile("([+-]{0,2})x\\^?\\+?(\\d+)?");
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);
         } else if (exprRe.matcher(s).matches()) {
