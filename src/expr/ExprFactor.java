@@ -11,7 +11,7 @@ public class ExprFactor extends Factor {
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
 
-    private static final String patternTerm = "\\(([^)]+)\\)\\^?(\\d+)?"; //捕获括号内内容和指数
+    private static final String patternTerm = "\\(([^)]+)\\)\\^?\\+?(\\d+)?"; //捕获括号内内容和指数
     private static final Pattern re = Pattern.compile(patternTerm);
 
     public ExprFactor(String factor) {
