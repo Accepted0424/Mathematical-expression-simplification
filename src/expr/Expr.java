@@ -39,7 +39,7 @@ public class Expr implements MonoArrayConvertible {
                     if (subString.isEmpty()) {
                         continue;
                     }
-                    //针对“+5*+-07”的情况
+                    //针对+5*+-07的情况
                     if (i > 1 && (expr.charAt(i - 1) == '*' || expr.charAt(i - 1) == '^')) {
                         continue;
                     }

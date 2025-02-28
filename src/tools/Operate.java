@@ -60,6 +60,11 @@ public class Operate {
         merged = merged.replaceAll("--", "+");
         merged = merged.replaceAll("\\+-", "-");
         merged = merged.replaceAll("-\\+", "-");
+        merged = merged.replaceAll("\\+\\+", "+");
+        merged = merged.replaceAll("--", "+");
+        merged = merged.replaceAll("\\+-", "-");
+        merged = merged.replaceAll("-\\+", "-");
+
         return merged;
     }
 
