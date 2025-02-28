@@ -1,5 +1,6 @@
 package expr;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,7 +24,12 @@ public class PowerFactor extends Factor {
             if (mc.group(2) != null) {
                 pow = Integer.parseInt(mc.group(2));
             }
-            int coe = (mc.group(1).equals("-") || mc.group(1).equals("+-")) ? -1 : 1;
+
+            BigInteger coe = BigInteger.ONE;
+            if (mc.group(1).equals("-") || mc.group(1).equals("+-")) {
+                coe = BigInteger.valueOf(-1);
+            }
+
             monos.add(new Mono(coe, pow));
             return monos;
         } else {

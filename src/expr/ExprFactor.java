@@ -2,6 +2,7 @@ package expr;
 
 import tools.Operate;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +40,7 @@ public class ExprFactor extends Factor {
                 } else {
                     //指数为0直接返回1
                     monos.clear();
-                    monos.add(new Mono(1, 0));
+                    monos.add(new Mono(BigInteger.ONE, 0));
                 }
             }
             return Operate.merge(monos);

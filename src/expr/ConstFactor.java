@@ -1,5 +1,8 @@
 package expr;
 
+import tools.Operate;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 
 public class ConstFactor extends Factor {
@@ -12,17 +15,14 @@ public class ConstFactor extends Factor {
     @Override
     public ArrayList<Mono> getMonos() {
         ArrayList<Mono> monos = new ArrayList<>();
-        int coe = myParseInt(getFactor());
+        BigInteger coe = myParseBigInt(getFactor());
         monos.add(new Mono(coe, 0));
         return monos;
     }
 
-    private int myParseInt(String input) {
-        // Integer.parserInt无法解析+-, 可以处理前导零
-        String fmt = input.replaceAll("\\+-", "-");
-        fmt = fmt.replaceAll("-\\+", "*");
-
-        return Integer.parseInt(fmt);
+    private BigInteger myParseBigInt(String input) {
+        String fmt = Operate.mergeSymbol(input);
+        return new BigInteger(fmt);
     }
 
 }

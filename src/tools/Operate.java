@@ -1,6 +1,8 @@
 package tools;
 
 import expr.Mono;
+
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +31,12 @@ public class Operate {
     }
 
     private static Mono simpleMul(Mono left, Mono right) {
-        return new Mono(left.getCoe() * right.getCoe(), left.getVarsPow() + right.getVarsPow());
+        return new Mono(left.getCoe().multiply(right.getCoe()), left.getVarsPow() + right.getVarsPow());
     }
 
     private static Mono simpleAdd(Mono left, Mono right) {
         if (left.getVarsPow() == right.getVarsPow()) {
-            return new Mono(left.getCoe() + right.getCoe(), left.getVarsPow());
+            return new Mono(left.getCoe().add(right.getCoe()), left.getVarsPow());
         } else {
             return null;
         }
@@ -46,7 +48,7 @@ public class Operate {
         Map<Integer, List<Mono>> map = monos.stream().collect(Collectors.groupingBy(Mono::getVarsPow));
         map.forEach((power, monoList) -> {
             // 对每一组的 Mono 按幂次进行合并
-            int totalCoefficient = monoList.stream().mapToInt(Mono::getCoe).sum(); // 合并相同幂次的系数
+            BigInteger totalCoefficient = monoList.stream().map(Mono::getCoe).reduce(BigInteger.ZERO, BigInteger::add); // 合并相同幂次的系数
             mergedMonos.add(new Mono(totalCoefficient, power)); // 添加合并后的结果
         });
         return mergedMonos;

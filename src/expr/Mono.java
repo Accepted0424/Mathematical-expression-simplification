@@ -1,15 +1,17 @@
 package expr;
 
+import java.math.BigInteger;
+
 public class Mono {
-    private int coe;
+    private BigInteger coe;
     private final int varsPow;
 
-    public Mono(int coe, int varsPow) {
+    public Mono(BigInteger coe, int varsPow) {
         this.coe = coe;
         this.varsPow = varsPow;
     }
 
-    public int getCoe() {
+    public BigInteger getCoe() {
         return coe;
     }
 
@@ -18,7 +20,7 @@ public class Mono {
     }
 
     public void inverseCoe() {
-        this.coe = -coe;
+        this.coe = coe.negate();
     }
 
     @Override
@@ -33,12 +35,12 @@ public class Mono {
             powString = "x^" + varsPow;
         }
 
-        if (coe == 0) {
+        if (coe.equals(BigInteger.ZERO)) {
             coeString = "";
             powString = "";
-        } else if (coe == 1 || coe == -1) {
+        } else if (coe.equals(BigInteger.valueOf(-1)) || coe.equals(BigInteger.valueOf(1))) {
             coeString = "";
-            if (coe == -1) {
+            if (coe.equals(BigInteger.valueOf(-1))) {
                 coeString = "-";
             }
             if (varsPow == 0) {
