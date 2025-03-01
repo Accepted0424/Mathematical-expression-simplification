@@ -31,7 +31,11 @@ public class Operate {
     }
 
     private static Mono simpleMul(Mono left, Mono right) {
-        return new Mono(left.getCoe().multiply(right.getCoe()), left.getVarsPow() + right.getVarsPow());
+        BigInteger leftCoe = left.getCoe();
+        BigInteger rightCoe = right.getCoe();
+        int leftPow = left.getVarsPow();
+        int rightPow = right.getVarsPow();
+        return new Mono(leftCoe.multiply(rightCoe), leftPow + rightPow);
     }
 
     private static Mono simpleAdd(Mono left, Mono right) {
@@ -45,10 +49,13 @@ public class Operate {
     //合并同类项
     public static ArrayList<Mono> merge(ArrayList<Mono> monos) {
         ArrayList<Mono> mergedMonos = new ArrayList<>();
-        Map<Integer, List<Mono>> map = monos.stream().collect(Collectors.groupingBy(Mono::getVarsPow));
+        Map<Integer, List<Mono>> map = monos.stream()
+            .collect(Collectors.groupingBy(Mono::getVarsPow));
         map.forEach((power, monoList) -> {
             // 对每一组的 Mono 按幂次进行合并
-            BigInteger totalCoefficient = monoList.stream().map(Mono::getCoe).reduce(BigInteger.ZERO, BigInteger::add); // 合并相同幂次的系数
+            BigInteger totalCoefficient = monoList.stream()
+                .map(Mono::getCoe)
+                .reduce(BigInteger.ZERO, BigInteger::add);
             mergedMonos.add(new Mono(totalCoefficient, power)); // 添加合并后的结果
         });
         return mergedMonos;
