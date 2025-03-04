@@ -1,9 +1,6 @@
 package tools;
 
-import expr.AtomicElement;
-import expr.Factor;
-import expr.FactorFactory;
-import expr.Mono;
+import expr.*;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -59,7 +56,7 @@ public class Operate {
         map.forEach((power, monoList) -> {
             // 对每一组的 Mono 按幂次进行合并
             BigInteger totalCoefficient = monoList.stream()
-                .map(Mono::getCoe)
+                .map(AtomicElement::getCoe)
                 .reduce(BigInteger.ZERO, BigInteger::add);
             mergedMonos.add(new Mono(totalCoefficient, power)); // 添加合并后的结果
         });
@@ -82,18 +79,17 @@ public class Operate {
     }
 
     /**
-     * 构建三角函数的单项式
-     * 传入字符串类型的三角函数因子，得到三角函数类型的单项式
-     * @param trigonometry
-     * @return
+     * <h2>构建三角函数的单项式</h2>
+     * 传入字符串类型的三角函数因子，得到三角函数类型的原子表达式
      */
-    public static AtomicElement buildTrigonometryMono(String trigonometry) {
-        Factor innerFactor = FactorFactory.getFactor(getStrInOutermostBracket(trigonometry));
-        //解析指数
+    public static AtomicSinCos buildTrigonometryAtom(String trigonometryFactor) {
+        Factor innerFactor = FactorFactory.getFactor(getStrInOutermostBracket(trigonometryFactor));
+
+        // 解析指数
         String pattern = "(sin)\\(" + innerFactor.getFactor() + "\\)\\^?(\\d+)?|(cos)\\(" + innerFactor.getFactor() + "\\)\\^?(\\d+)?";
         Pattern re = Pattern.compile(pattern);
         int expoent = 1;
-        Matcher m = re.matcher(trigonometry);
+        Matcher m = re.matcher(trigonometryFactor);
         if (m.matches()) {
             if (m.group(1) != null) {
                 expoent = Integer.parseInt(m.group(1));
@@ -122,7 +118,7 @@ public class Operate {
         }
         //化简+-和-+为-
         sb.append(Operate.mergeSymbol(sb.toString()));
-        return new Mono(BigInteger.ONE, expoent);
+        return new AtomicSinCos(BigInteger.ONE, expoent);
     }
 
     public static String getStrInOutermostBracket(String s) {

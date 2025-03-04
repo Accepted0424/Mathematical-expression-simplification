@@ -20,9 +20,11 @@ public class FactorFactory {
             for (int i = 0; i <= s.length(); i++) {
                 char c = s.charAt(i);
 
-                if (c == '(' && inBracket == 0) {
+                if (c == '(') {
+                    if (inBracket == 0) {
+                        start = i;
+                    }
                     inBracket++;
-                    start = i;
                 } else if (c == ')') {
                     inBracket--;
                 }

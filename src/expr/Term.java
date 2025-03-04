@@ -60,16 +60,16 @@ public class Term implements AtomicArrayConvertible {
     @Override
     public ArrayList<AtomicElement> getAtomicElement() {
         //factor的单项式相乘
-        ArrayList<AtomicElement> monos = factors.get(0).getAtomicElement();
+        ArrayList<AtomicElement> atoms = factors.get(0).getAtomicElement();
         for (int i = 1; i < factors.size(); i++) {
-            monos = Operate.mul(monos, factors.get(i).getAtomicElement());
+            atoms = Operate.mul(atoms, factors.get(i).getAtomicElement());
         }
 
         if (isNegative) {
-            for (AtomicElement mono : monos) {
-                mono.inverseCoe();
+            for (AtomicElement atom : atoms) {
+                atom.inverseCoe();
             }
         }
-        return monos;
+        return atoms;
     }
 }

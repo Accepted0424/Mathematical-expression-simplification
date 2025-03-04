@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PowerFactor extends Factor {
+public class PowerFactor extends Factor implements AtomicArrayConvertible{
     //带x的均为变量因子
     //example: x x^2
     private static final String patternTerm = "([+-]{0,2})x\\^?\\+?(\\d+)?";

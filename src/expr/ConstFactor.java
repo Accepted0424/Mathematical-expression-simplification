@@ -5,7 +5,7 @@ import tools.Operate;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-public class ConstFactor extends Factor {
+public class ConstFactor extends Factor implements AtomicArrayConvertible{
     //example: 1 12 123
 
     public ConstFactor(String factor) {

@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExprFactor extends Factor {
+public class ExprFactor extends Factor implements AtomicArrayConvertible{
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
 

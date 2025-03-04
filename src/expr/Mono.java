@@ -3,54 +3,38 @@ package expr;
 import java.math.BigInteger;
 
 public class Mono extends AtomicElement {
-    private BigInteger coe;
-    private final int varsPow;
 
     public Mono(BigInteger coe, int varsPow) {
-        this.coe = coe;
-        this.varsPow = varsPow;
-    }
-
-    public BigInteger getCoe() {
-        return coe;
-    }
-
-    public int getVarsPow() {
-        return varsPow;
-    }
-
-    @Override
-    public void inverseCoe() {
-        this.coe = coe.negate();
+        super(coe, varsPow);
     }
 
     @Override
     public String toString() {
         String powString = "";
         String coeString = "";
-        if (varsPow == 0) {
+        if (getVarsPow() == 0) {
             powString = "";
-        } else if (varsPow == 1) {
+        } else if (getVarsPow() == 1) {
             powString = "x";
         } else {
-            powString = "x^" + varsPow;
+            powString = "x^" + getVarsPow();
         }
 
-        if (coe.equals(BigInteger.ZERO)) {
+        if (getCoe().equals(BigInteger.ZERO)) {
             coeString = "";
             powString = "";
-        } else if (coe.equals(BigInteger.valueOf(-1)) || coe.equals(BigInteger.valueOf(1))) {
+        } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.valueOf(1))) {
             coeString = "";
-            if (coe.equals(BigInteger.valueOf(-1))) {
+            if (getCoe().equals(BigInteger.valueOf(-1))) {
                 coeString = "-";
             }
-            if (varsPow == 0) {
-                coeString = String.valueOf(coe);
+            if (getVarsPow() == 0) {
+                coeString = String.valueOf(getCoe());
             }
         } else {
-            coeString = coe + "*";
-            if (varsPow == 0) {
-                coeString = coe + "";
+            coeString = getCoe() + "*";
+            if (getVarsPow() == 0) {
+                coeString = getCoe() + "";
             }
         }
         return coeString + powString;
