@@ -30,7 +30,7 @@ public class PowerFactor extends Factor {
                 coe = BigInteger.valueOf(-1);
             }
 
-            monos.add(new Mono(coe, pow));
+            monos.add(new Mono("", coe, pow));
             return monos;
         } else {
             System.err.println("Invalid PowerFactor: " + getFactor());

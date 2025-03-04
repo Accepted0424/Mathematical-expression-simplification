@@ -3,12 +3,26 @@ package expr;
 import java.math.BigInteger;
 
 public class Mono {
+    private String prefix;
     private BigInteger coe;
     private final int varsPow;
 
-    public Mono(BigInteger coe, int varsPow) {
+    public Mono(String prefix, BigInteger coe, int varsPow) {
+        this.prefix = prefix;
         this.coe = coe;
         this.varsPow = varsPow;
+    }
+
+    public String getPrefix() {
+        return prefix;
+    }
+
+    public boolean isSin() {
+        return prefix.equals("sin");
+    }
+
+    public boolean isCos() {
+        return prefix.equals("cos");
     }
 
     public BigInteger getCoe() {

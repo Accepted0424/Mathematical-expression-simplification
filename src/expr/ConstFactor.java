@@ -16,7 +16,7 @@ public class ConstFactor extends Factor {
     public ArrayList<Mono> getMonos() {
         ArrayList<Mono> monos = new ArrayList<>();
         BigInteger coe = myParseBigInt(getFactor());
-        monos.add(new Mono(coe, 0));
+        monos.add(new Mono("", coe, 0));
         return monos;
     }
 

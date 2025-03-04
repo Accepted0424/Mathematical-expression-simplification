@@ -18,13 +18,14 @@ public class FactorFactory {
             int inBracket = 0;
             for (int i = 0; i <= s.length(); i++) {
                 char c = s.charAt(i);
-                // 获取最外层括号内的内容
-                if (c == '(') {
+
+                if (c == '(' && inBracket == 0) {
                     inBracket++;
+                    start = i;
                 } else if (c == ')') {
                     inBracket--;
                 }
-                // 判断是否符合表达式因子的格式
+                // 删去最外层括号内的所有内容之后，判断是否符合表达式因子的格式
                 if (inBracket == 0) {
                     String remaining = s.substring(0,start) + s.substring(i+1);
                     if (exprNoBracketRe.matcher(remaining).matches()) {

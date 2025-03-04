@@ -1,0 +1,55 @@
+package expr;
+
+import tools.Operate;
+
+import java.math.BigInteger;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+
+public class TrigonometryFactor extends Factor {
+    // example: sin(x) cos(x) sin(x^2)^2 cos(x+1)^2 sin((x+1)*2)^2
+    private final static String pattern = "sin\\^(\\d+)|cos\\^(\\d+)";
+    private final static Pattern re = Pattern.compile(pattern);
+
+    public TrigonometryFactor(String factor) {
+        super(factor);
+    }
+
+    @Override
+    public ArrayList<Mono> getMonos() {
+        ArrayList<Mono> monos = new ArrayList<>();
+        // 获取最外层括号内的内容
+        String s = getFactor();
+        int start = 0;
+        int inBracket = 0;
+        for (int i = 0; i <= s.length() - 1; i++) {
+            char c = s.charAt(i);
+
+            if (c == '(' && inBracket == 0) {
+                inBracket++;
+                start = i;
+            } else if (c == ')') {
+                inBracket--;
+            }
+
+            if (inBracket == 0) {
+                String remaining = s.substring(0, start) + s.substring(i + 1);
+                String innerExpr = s.substring(start + 1, i);
+                if (re.matcher(remaining).matches()) {
+                    ArrayList<Mono> innerMonos = new ArrayList<>();
+                    if (s.startsWith("sin")) {
+                        innerMonos.add(new Mono("", BigInteger.ONE, 1));
+                    } else {
+                        innerMonos.add(new Mono("", BigInteger.ONE, 2));
+                    }
+                    if (s.endsWith("2")) {
+                        innerMonos = Operate.mul(innerMonos, innerMonos);
+                    }
+                    monos = Operate.mul(monos, innerMonos);
+                    return monos;
+                }
+            }
+        }
+        return null;
+    }
+}
