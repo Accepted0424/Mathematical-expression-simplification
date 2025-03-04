@@ -5,17 +5,35 @@ import java.util.regex.Pattern;
 public class FactorFactory {
     public static Factor getFactor(String s) {
         Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
-        Pattern exprRe = Pattern.compile("[+-]?\\(([^)]+)\\)\\^?\\+?(\\d+)?");
         Pattern powerRe = Pattern.compile("([+-]{0,2})x\\^?\\+?(\\d+)?");
+        Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
+
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);
-        } else if (exprRe.matcher(s).matches()) {
-            return new ExprFactor(s);
         } else if (powerRe.matcher(s).matches()) {
             return new PowerFactor(s);
         } else {
-            System.err.println("Invalid factor in FactorFactory: " + s);
-            return null;
+            // 加入嵌套括号之后匹配表达式因子需要特殊处理，不能直接使用正则表达式
+            int start = 0;
+            int inBracket = 0;
+            for (int i = 0; i <= s.length(); i++) {
+                char c = s.charAt(i);
+                // 获取最外层括号内的内容
+                if (c == '(') {
+                    inBracket++;
+                } else if (c == ')') {
+                    inBracket--;
+                }
+                // 判断是否符合表达式因子的格式
+                if (inBracket == 0) {
+                    String remaining = s.substring(0,start) + s.substring(i+1);
+                    if (exprNoBracketRe.matcher(remaining).matches()) {
+                        return new ExprFactor(s);
+                    }
+                }
+            }
+            System.err.println("Error in FactorFactory: Invalid factor format in " + s);
+            return new ExprFactor(s);
         }
     }
 }

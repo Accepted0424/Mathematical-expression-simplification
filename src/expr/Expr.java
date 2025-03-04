@@ -20,18 +20,18 @@ public class Expr implements MonoArrayConvertible {
         //便于以加号分割term
         expr = Pattern.compile("-").matcher(expr).replaceAll("+-");
 
-        boolean escaped = true; //是否在括号外
+        int inBracket = 0; //是否在括号外
         int start = 0;
         for (int i = 0; i < expr.length(); i++) {
             char ch = expr.charAt(i);
 
             if (ch == '(') {
-                escaped = false;
+                inBracket++;
             } else if (ch == ')') {
-                escaped = true;
+                inBracket--;
             }
 
-            if (escaped) {
+            if (inBracket == 0) {
                 //subString函数是[x,y)的
                 if (ch == '+') {
                     String subString = expr.substring(start, i);

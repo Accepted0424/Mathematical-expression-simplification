@@ -23,7 +23,7 @@ public class Term implements MonoArrayConvertible {
 
     private ArrayList<Factor> extractFactors() {
         //以不被括号包裹的*为分界线提取factor
-        boolean escaped = true; //是否在括号外
+        int inBracket = 0; //是否在括号外
         int start = 0;
 
         //term可能为负
@@ -36,12 +36,12 @@ public class Term implements MonoArrayConvertible {
             char ch = term.charAt(i);
 
             if (ch == '(') {
-                escaped = false;
+                inBracket++;
             } else if (ch == ')') {
-                escaped = true;
+                inBracket--;
             }
 
-            if (escaped) {
+            if (inBracket == 0) {
                 //subString函数是[x,y)的
                 if (ch == '*') {
                     String subString = term.substring(start, i);

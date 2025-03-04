@@ -11,7 +11,7 @@ public class ExprFactor extends Factor {
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
 
-    private static final String patternTerm = "\\(([^)]+)\\)\\^?\\+?(\\d+)?"; //捕获括号内内容和指数
+    private static final String patternTerm = "\\^?\\+?(\\d+)?"; //捕获括号内内容和指数
     private static final Pattern re = Pattern.compile(patternTerm);
 
     public ExprFactor(String factor) {
@@ -20,34 +20,46 @@ public class ExprFactor extends Factor {
 
     @Override
     public ArrayList<Mono> getMonos() {
-        ArrayList<Mono> monos = new ArrayList<>();
-        Matcher m = re.matcher(getFactor());
 
-        if (m.find()) {
-            String innerContext = m.group(1);
-            //处理括号内表达式
-            Expr innerExpr = new Expr(innerContext);
-            ArrayList<Mono> innerMonos = innerExpr.getMonos();
-            monos.addAll(innerMonos);
+        String s = getFactor();
+        int start = 0;
+        int inBracket = 0;
+        for (int i = 0; i <= s.length(); i++) {
+            char c = s.charAt(i);
+            // 获取最外层括号内的内容
+            if (c == '(') {
+                inBracket++;
+            } else if (c == ')') {
+                inBracket--;
+            }
+            // 判断是否符合表达式因子的格式
+            if (inBracket == 0) {
+                String remaining = s.substring(0, start) + s.substring(i + 1);
+                String innerExpr = s.substring(start+1, i);
+                Matcher m = re.matcher(remaining);
+                if (m.matches()) {
+                    Expr expr = new Expr(innerExpr);
+                    ArrayList<Mono> monos = new ArrayList<>(expr.getMonos());
 
-            if (m.group(2) != null) {
-                //含有指数
-                int exponent = Integer.parseInt(m.group(2));
-                if (exponent != 0) {
-                    for (int i = 0; i < exponent - 1; i++) {
-                        monos = Operate.mul(monos, innerMonos);
+                    if (m.group(1) != null) {
+                        // 含有指数
+                        int exponent = Integer.parseInt(m.group(1));
+                        if (exponent != 0) {
+                            for (int j = 0; j < exponent - 1; j++) {
+                                monos = Operate.mul(monos, new Expr(innerExpr).getMonos());
+                            }
+                        } else {
+                            // 指数为0直接返回1
+                            monos.clear();
+                            monos.add(new Mono(BigInteger.ONE, 0));
+                        }
                     }
-                } else {
-                    //指数为0直接返回1
-                    monos.clear();
-                    monos.add(new Mono(BigInteger.ONE, 0));
+                    return Operate.merge(monos);
                 }
             }
-            return Operate.merge(monos);
-        } else {
-            System.err.println("No match found in ExprFactor");
-            return null;
         }
+        System.err.println("Error in ExprFactor: Invalid factor format in " + s);
+        return null;
     }
 
     @Override
