@@ -3,26 +3,26 @@ package expr;
 import java.math.BigInteger;
 
 public class Mono {
-    private String prefix;
+    private final String trigonometry;
     private BigInteger coe;
     private final int varsPow;
 
-    public Mono(String prefix, BigInteger coe, int varsPow) {
-        this.prefix = prefix;
+    public Mono(String trigonometry, BigInteger coe, int varsPow) {
+        this.trigonometry = trigonometry;
         this.coe = coe;
         this.varsPow = varsPow;
     }
 
-    public String getPrefix() {
-        return prefix;
+    public String getTrigonometry() {
+        return trigonometry;
     }
 
     public boolean isSin() {
-        return prefix.equals("sin");
+        return trigonometry.contains("sin");
     }
 
     public boolean isCos() {
-        return prefix.equals("cos");
+        return trigonometry.contains("cos");
     }
 
     public BigInteger getCoe() {

@@ -78,14 +78,14 @@ public class Expr implements MonoArrayConvertible {
         }
 
         //最后一个mono为空不需要添加括号
-        if (monos.get(monos.size() - 1).toString().isEmpty()) {
-            if (sb.length() > 0) {
+        if (monos.getLast().toString().isEmpty()) {
+            if (!sb.isEmpty()) {
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
-        sb.append(monos.get(monos.size() - 1));
+        sb.append(monos.getLast());
 
-        if (sb.length() == 0) {
+        if (sb.isEmpty()) {
             return "0";
         }
         //化简+-和-+为-

@@ -1,11 +1,15 @@
 package tools;
 
+import expr.Factor;
+import expr.FactorFactory;
 import expr.Mono;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class Operate {
@@ -35,12 +39,12 @@ public class Operate {
         BigInteger rightCoe = right.getCoe();
         int leftPow = left.getVarsPow();
         int rightPow = right.getVarsPow();
-        return new Mono(leftCoe.multiply(rightCoe), leftPow + rightPow);
+        return new Mono("", leftCoe.multiply(rightCoe), leftPow + rightPow);
     }
 
     private static Mono simpleAdd(Mono left, Mono right) {
         if (left.getVarsPow() == right.getVarsPow()) {
-            return new Mono(left.getCoe().add(right.getCoe()), left.getVarsPow());
+            return new Mono("", left.getCoe().add(right.getCoe()), left.getVarsPow());
         } else {
             return null;
         }
@@ -56,13 +60,14 @@ public class Operate {
             BigInteger totalCoefficient = monoList.stream()
                 .map(Mono::getCoe)
                 .reduce(BigInteger.ZERO, BigInteger::add);
-            mergedMonos.add(new Mono(totalCoefficient, power)); // 添加合并后的结果
+            mergedMonos.add(new Mono("", totalCoefficient, power)); // 添加合并后的结果
         });
         return mergedMonos;
     }
 
     public static String mergeSymbol(String s) {
         String merged = "";
+        // merge两边确保不会连续出现三个+或-
         merged = s.replaceAll("\\+\\+", "+");
         merged = merged.replaceAll("--", "+");
         merged = merged.replaceAll("\\+-", "-");
@@ -73,6 +78,63 @@ public class Operate {
         merged = merged.replaceAll("-\\+", "-");
 
         return merged;
+    }
+
+    public static Mono buildTrigonometryMono(String trigonometry) {
+        Factor innerFactor = FactorFactory.getFactor(getStrInOutermostBracket(trigonometry));
+        //解析指数
+        String pattern = "(sin)\\(" + innerFactor.getFactor() + "\\)\\^?(\\d+)?|(cos)\\(" + innerFactor.getFactor() + "\\)\\^?(\\d+)?";
+        Pattern re = Pattern.compile(pattern);
+        int expoent = 1;
+        Matcher m = re.matcher(trigonometry);
+        if (m.matches()) {
+            if (m.group(1) != null) {
+                expoent = Integer.parseInt(m.group(1));
+            }
+        } else {
+            expoent = 0;
+        }
+
+        ArrayList<Mono> innerMonos = innerFactor.getMonos();
+        StringBuilder sb = new StringBuilder();
+        for (Mono mono : innerMonos) {
+            sb.append(mono);
+            sb.append("+");
+        }
+        //最后一个mono为空不需要添加括号
+        if (innerMonos.getLast().toString().isEmpty()) {
+            if (!sb.isEmpty()) {
+                sb.deleteCharAt(sb.length() - 1);
+            }
+        }
+        sb.append(innerMonos.getLast());
+
+        if (sb.isEmpty()) {
+            sb.append("0");
+        }
+        //化简+-和-+为-
+        sb.append(Operate.mergeSymbol(sb.toString()));
+        return new Mono(sb.toString(), BigInteger.ONE, expoent);
+    }
+
+    public static String getStrInOutermostBracket(String s) {
+        int inBracket = 0;
+        int start = 0;
+        for (int i = 0; i < s.length(); i++) {
+            char ch = s.charAt(i);
+            if (ch == '(') {
+                inBracket++;
+                if (inBracket == 1) {
+                    start = i;
+                }
+            } else if (ch == ')') {
+                inBracket--;
+                if (inBracket == 0) {
+                    return s.substring(start + 1, i);
+                }
+            }
+        }
+        return null;
     }
 
 }
