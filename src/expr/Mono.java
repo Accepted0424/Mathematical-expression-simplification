@@ -2,27 +2,13 @@ package expr;
 
 import java.math.BigInteger;
 
-public class Mono {
-    private final String trigonometry;
+public class Mono extends AtomicElement {
     private BigInteger coe;
     private final int varsPow;
 
-    public Mono(String trigonometry, BigInteger coe, int varsPow) {
-        this.trigonometry = trigonometry;
+    public Mono(BigInteger coe, int varsPow) {
         this.coe = coe;
         this.varsPow = varsPow;
-    }
-
-    public String getTrigonometry() {
-        return trigonometry;
-    }
-
-    public boolean isSin() {
-        return trigonometry.contains("sin");
-    }
-
-    public boolean isCos() {
-        return trigonometry.contains("cos");
     }
 
     public BigInteger getCoe() {
@@ -33,6 +19,7 @@ public class Mono {
         return varsPow;
     }
 
+    @Override
     public void inverseCoe() {
         this.coe = coe.negate();
     }

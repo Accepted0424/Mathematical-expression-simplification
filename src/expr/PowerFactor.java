@@ -16,8 +16,8 @@ public class PowerFactor extends Factor {
     }
 
     @Override
-    public ArrayList<Mono> getMonos() {
-        ArrayList<Mono> monos = new ArrayList<>();
+    public ArrayList<AtomicElement> getAtomicElement() {
+        ArrayList<AtomicElement> monos = new ArrayList<>();
         Matcher mc = re.matcher(getFactor());
         if (mc.matches()) {
             int pow = 1;
@@ -30,7 +30,7 @@ public class PowerFactor extends Factor {
                 coe = BigInteger.valueOf(-1);
             }
 
-            monos.add(new Mono("", coe, pow));
+            monos.add(new Mono(coe, pow));
             return monos;
         } else {
             System.err.println("Invalid PowerFactor: " + getFactor());

@@ -32,7 +32,7 @@ public class FactorFactory {
                     if (exprNoBracketRe.matcher(remaining).matches()) {
                         return new ExprFactor(s);
                     } else if (s.contains("sin") || s.contains("cos")) {
-                        return new TrigonometryFactor(s);
+                        return new SinCosFactor(s);
                     }
                 }
             }

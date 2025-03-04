@@ -5,7 +5,7 @@ import tools.Operate;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class Expr implements MonoArrayConvertible {
+public class Expr implements AtomicArrayConvertible {
     private String expr;
     private ArrayList<Term> terms = new ArrayList<>();
 
@@ -57,17 +57,17 @@ public class Expr implements MonoArrayConvertible {
     }
 
     @Override
-    public ArrayList<Mono> getMonos() {
-        ArrayList<Mono> monos = new ArrayList<>(terms.get(0).getMonos());
+    public ArrayList<AtomicElement> getAtomicElement() {
+        ArrayList<AtomicElement> monos = new ArrayList<>(terms.get(0).getAtomicElement());
         for (int i = 1; i < terms.size(); i++) {
-            monos = Operate.add(monos, terms.get(i).getMonos());
+            monos = Operate.add(monos, terms.get(i).getAtomicElement());
         }
         return Operate.merge(monos);
     }
 
     @Override
     public String toString() {
-        ArrayList<Mono> monos = getMonos();
+        ArrayList<AtomicElement> monos = getAtomicElement();
         StringBuilder sb = new StringBuilder();
 
         for (int i = 0; i < monos.size() - 1; i++) {
@@ -78,14 +78,14 @@ public class Expr implements MonoArrayConvertible {
         }
 
         //最后一个mono为空不需要添加括号
-        if (monos.getLast().toString().isEmpty()) {
-            if (!sb.isEmpty()) {
+        if (monos.get(monos.size() - 1).toString().isEmpty()) {
+            if (sb.length() > 0) {
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
-        sb.append(monos.getLast());
+        sb.append(monos.get(monos.size() - 1).toString());
 
-        if (sb.isEmpty()) {
+        if (sb.toString().isEmpty()) {
             return "0";
         }
         //化简+-和-+为-

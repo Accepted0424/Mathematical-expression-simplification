@@ -3,7 +3,7 @@ package expr;
 import tools.Operate;
 import java.util.ArrayList;
 
-public class Term implements MonoArrayConvertible {
+public class Term implements AtomicArrayConvertible {
     // example: (x+1)*(2*x+6) (x+1)^2*2 (x+1)^3
 
     private ArrayList<Factor> factors = new ArrayList<>();
@@ -58,15 +58,15 @@ public class Term implements MonoArrayConvertible {
     }
 
     @Override
-    public ArrayList<Mono> getMonos() {
+    public ArrayList<AtomicElement> getAtomicElement() {
         //factor的单项式相乘
-        ArrayList<Mono> monos = factors.get(0).getMonos();
+        ArrayList<AtomicElement> monos = factors.get(0).getAtomicElement();
         for (int i = 1; i < factors.size(); i++) {
-            monos = Operate.mul(monos, factors.get(i).getMonos());
+            monos = Operate.mul(monos, factors.get(i).getAtomicElement());
         }
 
         if (isNegative) {
-            for (Mono mono : monos) {
+            for (AtomicElement mono : monos) {
                 mono.inverseCoe();
             }
         }

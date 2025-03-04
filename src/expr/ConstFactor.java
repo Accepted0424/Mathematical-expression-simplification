@@ -13,10 +13,10 @@ public class ConstFactor extends Factor {
     }
 
     @Override
-    public ArrayList<Mono> getMonos() {
-        ArrayList<Mono> monos = new ArrayList<>();
+    public ArrayList<AtomicElement> getAtomicElement() {
+        ArrayList<AtomicElement> monos = new ArrayList<>();
         BigInteger coe = myParseBigInt(getFactor());
-        monos.add(new Mono("", coe, 0));
+        monos.add(new Mono(coe, 0));
         return monos;
     }
 

@@ -1,25 +1,23 @@
 package expr;
 
-import tools.Operate;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TrigonometryFactor extends Factor {
+public class SinCosFactor extends Factor {
     // example: sin(x) cos(x) sin(x^2)^2 cos(x+1)^2 sin((x+1)*2)^2
     private final static String pattern = "(sin)\\^?(\\d+)?|(cos)\\^?(\\d+)?";
     private final static Pattern re = Pattern.compile(pattern);
     private String innerFactor;
 
-    public TrigonometryFactor(String factor) {
+    public SinCosFactor(String factor) {
         super(factor);
     }
 
     @Override
-    public ArrayList<Mono> getMonos() {
-        ArrayList<Mono> monos = new ArrayList<>();
+    public ArrayList<AtomicElement> getAtomicElement() {
+        ArrayList<AtomicElement> monos = new ArrayList<>();
         // 获取最外层括号内的内容
         String s = getFactor();
         int start = 0;
@@ -40,7 +38,7 @@ public class TrigonometryFactor extends Factor {
                 if (m.matches()) {
                     Factor innerFactor = FactorFactory.getFactor(s);
 
-                    Mono mono = new Mono(s, BigInteger.ONE, 0);
+                    Mono mono = new Mono(BigInteger.ONE, 0);
                     monos.add(mono);
                     return monos;
                 }

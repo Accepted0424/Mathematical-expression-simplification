@@ -1,6 +1,6 @@
 package expr;
 
-public abstract class Factor implements MonoArrayConvertible {
+public abstract class Factor implements AtomicArrayConvertible {
     private final String factor;
 
     public Factor(String factor) {
