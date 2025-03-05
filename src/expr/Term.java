@@ -58,11 +58,11 @@ public class Term implements AtomicArrayConvertible {
     }
 
     @Override
-    public ArrayList<AtomicElement> getAtomicElement() {
+    public ArrayList<AtomicElement> getAtomicElements() {
         //factor的单项式相乘
-        ArrayList<AtomicElement> atoms = factors.get(0).getAtomicElement();
+        ArrayList<AtomicElement> atoms = factors.get(0).getAtomicElements();
         for (int i = 1; i < factors.size(); i++) {
-            atoms = Operate.mul(atoms, factors.get(i).getAtomicElement());
+            atoms = Operate.mul(atoms, factors.get(i).getAtomicElements());
         }
 
         if (isNegative) {

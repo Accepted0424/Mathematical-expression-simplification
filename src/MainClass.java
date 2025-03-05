@@ -15,3 +15,10 @@ public class MainClass {
         System.out.println(expr);
     }
 }
+
+// test case
+// 3*sin(x+1) + 2 * sin(1+x)                    Accepted
+// 3*sin(1+(x+1)^2) + 2*sin((1+x)^2+1)          Accepted
+// 3*sin(1+(x+1)^2)*sin(x+1) + 2*sin((1+x)^2+1) Accepted
+// sin(1)*x*sin(2) + sin(2-1)*sin(1+1)*x        Accepted
+// sin(1)*x*sin(2) + sin(2-1)*sin(1+0)*x        Accepted

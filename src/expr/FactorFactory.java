@@ -12,8 +12,10 @@ public class FactorFactory {
             return new ConstFactor(s);
         } else if (powerRe.matcher(s).matches()) {
             return new PowerFactor(s);
+        } else if (s.contains("sin") || s.contains("cos")) {
+            return new SinCosFactor(s);
         } else {
-            // 匹配 ExprFactor 或 TrigonometryFactor
+            // 匹配 ExprFactor
             // 加入嵌套括号之后匹配表达式因子需要特殊处理，不能直接使用正则表达式
             int start = 0;
             int inBracket = 0;
@@ -33,8 +35,6 @@ public class FactorFactory {
                     String remaining = s.substring(0,start) + s.substring(i+1);
                     if (exprNoBracketRe.matcher(remaining).matches()) {
                         return new ExprFactor(s);
-                    } else if (s.contains("sin") || s.contains("cos")) {
-                        return new SinCosFactor(s);
                     }
                 }
             }

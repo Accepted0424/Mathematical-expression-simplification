@@ -19,7 +19,7 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible{
     }
 
     @Override
-    public ArrayList<AtomicElement> getAtomicElement() {
+    public ArrayList<AtomicElement> getAtomicElements() {
 
         String s = getFactor();
         int start = 0;
@@ -39,19 +39,19 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible{
                 Matcher m = re.matcher(remaining);
                 if (m.matches()) {
                     Expr expr = new Expr(innerExpr);
-                    ArrayList<AtomicElement> monos = new ArrayList<>(expr.getAtomicElement());
+                    ArrayList<AtomicElement> monos = new ArrayList<>(expr.getAtomicElements());
 
                     if (m.group(1) != null) {
                         // 含有指数
                         int exponent = Integer.parseInt(m.group(1));
                         if (exponent != 0) {
                             for (int j = 0; j < exponent - 1; j++) {
-                                monos = Operate.mul(monos, new Expr(innerExpr).getAtomicElement());
+                                monos = Operate.mul(monos, new Expr(innerExpr).getAtomicElements());
                             }
                         } else {
                             // 指数为0直接返回1
                             monos.clear();
-                            monos.add(new AtomicElement(BigInteger.ONE, 0));
+                            monos.add(new AtomicElement(BigInteger.ONE, 0,null));
                         }
                     }
                     return Operate.merge(monos);

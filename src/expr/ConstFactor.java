@@ -13,7 +13,7 @@ public class ConstFactor extends Factor implements AtomicArrayConvertible{
     }
 
     @Override
-    public ArrayList<AtomicElement> getAtomicElement() {
+    public ArrayList<AtomicElement> getAtomicElements() {
         ArrayList<AtomicElement> atoms = new ArrayList<>();
         BigInteger coe = myParseBigInt(getFactor());
         atoms.add(new AtomicElement(coe, 0, null));

@@ -3,9 +3,7 @@ package tools;
 import expr.*;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
@@ -37,30 +35,39 @@ public class Operate {
         BigInteger rightCoe = right.getCoe();
         int leftPow = left.getVarsPow();
         int rightPow = right.getVarsPow();
-        return new AtomicElement(leftCoe.multiply(rightCoe), leftPow + rightPow, null);
+        ArrayList<SinCosFactor> triFactors = left.getTriFactors();
+        triFactors.addAll(right.getTriFactors());
+        return new AtomicElement(leftCoe.multiply(rightCoe), leftPow + rightPow, triFactors);
     }
 
     private static AtomicElement simpleAdd(AtomicElement left, AtomicElement right) {
-        if (left.getVarsPow() == right.getVarsPow()) {
-            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getVarsPow());
-        } else {
+        if (left.getVarsPow() == right.getVarsPow() && left.getTriFactorsStr().equals(right.getTriFactorsStr())) {
+            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getVarsPow(), left.getTriFactors());
+        } else if (left.getVarsPow() == right.getVarsPow()) {
+            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getVarsPow(), null);
+        }
+        else {
             return null;
         }
     }
 
     //合并同类项
-    public static ArrayList<AtomicElement> merge(ArrayList<AtomicElement> monos) {
-        ArrayList<AtomicElement> mergedMonos = new ArrayList<>();
-        Map<Integer, List<AtomicElement>> map = monos.stream()
-            .collect(Collectors.groupingBy(AtomicElement::getVarsPow));
-        map.forEach((power, monoList) -> {
-            // 对每一组的 Mono 按幂次进行合并
-            BigInteger totalCoefficient = monoList.stream()
-                .map(AtomicElement::getCoe)
-                .reduce(BigInteger.ZERO, BigInteger::add);
-            mergedMonos.add(new AtomicElement(totalCoefficient, power)); // 添加合并后的结果
-        });
-        return mergedMonos;
+    public static ArrayList<AtomicElement> merge(ArrayList<AtomicElement> atoms) {
+        HashMap<String, AtomicElement> map = new HashMap<>();
+        for (AtomicElement atom: atoms) {
+            String key = atom.getVarsPow() + "_" + atom.getTriFactorsStr();
+            if (map.containsKey(key)) {
+                AtomicElement merged = simpleAdd(map.get(key), atom);
+                if (merged != null) {
+                    map.put(key, merged);
+                } else {
+                    map.put(key, atom);
+                }
+            } else {
+                map.put(key, atom);
+            }
+        }
+        return new ArrayList<>(map.values());
     }
 
     public static String mergeSymbol(String s) {
@@ -78,22 +85,26 @@ public class Operate {
         return merged;
     }
 
-
-
-    public static String getStrInOutermostBracket(String s) {
+    /**
+     * @param s input string
+     * @return 最外层括号内的字符串和括号外的字符串（均不包括最外层括号）
+     */
+    public static Map.Entry<String, String> getStrInOutermostBracket(String s) {
         int inBracket = 0;
         int start = 0;
         for (int i = 0; i < s.length(); i++) {
             char ch = s.charAt(i);
             if (ch == '(') {
-                inBracket++;
-                if (inBracket == 1) {
+                if (inBracket == 0) {
                     start = i;
                 }
+                inBracket++;
             } else if (ch == ')') {
                 inBracket--;
                 if (inBracket == 0) {
-                    return s.substring(start + 1, i);
+                    String innerStr = s.substring(start + 1, i);
+                    String outerStr = s.substring(0, start) + s.substring(i + 1);
+                    return new AbstractMap.SimpleEntry<>(innerStr, outerStr);
                 }
             }
         }

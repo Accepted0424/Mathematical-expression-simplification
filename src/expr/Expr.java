@@ -57,33 +57,36 @@ public class Expr implements AtomicArrayConvertible {
     }
 
     @Override
-    public ArrayList<AtomicElement> getAtomicElement() {
-        ArrayList<AtomicElement> atoms = new ArrayList<>(terms.get(0).getAtomicElement());
+    public ArrayList<AtomicElement> getAtomicElements() {
+        ArrayList<AtomicElement> atoms = new ArrayList<>(terms.get(0).getAtomicElements());
         for (int i = 1; i < terms.size(); i++) {
-            atoms = Operate.add(atoms, terms.get(i).getAtomicElement());
+            atoms = Operate.add(atoms, terms.get(i).getAtomicElements());
         }
         return Operate.merge(atoms);
     }
 
     @Override
     public String toString() {
-        ArrayList<AtomicElement> atoms = getAtomicElement();
+        ArrayList<AtomicElement> atoms = getAtomicElements();
+        ArrayList<AtomicElement> mergedAtoms = Operate.merge(atoms);
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < atoms.size() - 1; i++) {
-            if (!atoms.get(i).toString().isEmpty()) {
-                sb.append(atoms.get(i));
-                sb.append("+");
+        for (int i = 0; i < mergedAtoms.size() - 1; i++) {
+            if (!mergedAtoms.get(i).toString().isEmpty()) {
+                sb.append(mergedAtoms.get(i));
+                if (i != mergedAtoms.size() - 1) {
+                    sb.append("+");
+                }
             }
         }
 
         //最后一个mono为空不需要添加括号
-        if (atoms.get(atoms.size() - 1).toString().isEmpty()) {
+        if (mergedAtoms.get(mergedAtoms.size() - 1).toString().isEmpty()) {
             if (sb.length() > 0) {
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
-        sb.append(atoms.get(atoms.size() - 1).toString());
+        sb.append(mergedAtoms.get(mergedAtoms.size() - 1).toString());
 
         if (sb.toString().isEmpty()) {
             return "0";

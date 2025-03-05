@@ -16,7 +16,7 @@ public class PowerFactor extends Factor implements AtomicArrayConvertible{
     }
 
     @Override
-    public ArrayList<AtomicElement> getAtomicElement() {
+    public ArrayList<AtomicElement> getAtomicElements() {
         ArrayList<AtomicElement> atoms = new ArrayList<>();
         Matcher mc = re.matcher(getFactor());
         if (mc.matches()) {

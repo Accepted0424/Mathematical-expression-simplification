@@ -4,6 +4,7 @@ import tools.Operate;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Objects;
 
 public class AtomicElement {
@@ -16,7 +17,9 @@ public class AtomicElement {
     public AtomicElement(BigInteger coe, int varsPow, ArrayList<SinCosFactor> triFactors) {
         this.coe = coe;
         this.varsPow = varsPow;
-        this.triFactors.addAll(triFactors);
+        if (triFactors != null) {
+            this.triFactors.addAll(triFactors);
+        }
     }
 
     public void inverseCoe(){
@@ -29,6 +32,22 @@ public class AtomicElement {
 
     public int getVarsPow() {
         return varsPow;
+    }
+
+    public ArrayList<SinCosFactor> getTriFactors() {
+        return triFactors;
+    }
+
+    // 便于作为map的key
+    public String getTriFactorsStr() {
+        StringBuilder sb = new StringBuilder();
+        for (SinCosFactor sinCosFactor : triFactors) {
+            sb.append(sinCosFactor);
+            if (triFactors.indexOf(sinCosFactor) != triFactors.size() - 1) {
+                sb.append("*");
+            }
+        }
+        return sb.toString();
     }
 
     @Override
@@ -52,24 +71,17 @@ public class AtomicElement {
         if (this.triFactors.size() != that.triFactors.size()) {
             return false;
         }
-        return Operate.hashSameElement(this.triFactors, that.triFactors);
+        return getTriFactorsStr().equals(that.getTriFactorsStr());
     }
 
     @Override
     public String toString() {
         String powString = "";
         String coeString = "";
-        if (getVarsPow() == 0) {
-            powString = "";
-        } else if (getVarsPow() == 1) {
-            powString = "x";
-        } else {
-            powString = "x^" + getVarsPow();
-        }
+        StringBuilder triString = new StringBuilder();
 
         if (getCoe().equals(BigInteger.ZERO)) {
-            coeString = "";
-            powString = "";
+            return "";
         } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.valueOf(1))) {
             coeString = "";
             if (getCoe().equals(BigInteger.valueOf(-1))) {
@@ -84,7 +96,31 @@ public class AtomicElement {
                 coeString = getCoe() + "";
             }
         }
-        return coeString + powString;
+
+        if (getVarsPow() == 0) {
+            if(!getTriFactors().isEmpty() && !getCoe().equals(BigInteger.ONE)) {
+                powString = "*";
+            } else {
+                powString = "";
+            }
+        } else if (getVarsPow() == 1) {
+            powString = "x";
+            if (!getTriFactors().isEmpty()) {
+                powString = "x*";
+            }
+        } else {
+            powString = "x^" + getVarsPow();
+        }
+
+        if (!triFactors.isEmpty()) {
+            for (int i = 0; i < triFactors.size(); i++) {
+                triString.append(triFactors.get(i).toString());
+                if (i != triFactors.size() - 1) {
+                    triString.append("*");
+                }
+            }
+        }
+        return coeString + powString + triString.toString();
     }
 
 }
