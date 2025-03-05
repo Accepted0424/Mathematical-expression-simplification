@@ -17,7 +17,7 @@ public class PowerFactor extends Factor implements AtomicArrayConvertible{
 
     @Override
     public ArrayList<AtomicElement> getAtomicElement() {
-        ArrayList<AtomicElement> monos = new ArrayList<>();
+        ArrayList<AtomicElement> atoms = new ArrayList<>();
         Matcher mc = re.matcher(getFactor());
         if (mc.matches()) {
             int pow = 1;
@@ -30,8 +30,8 @@ public class PowerFactor extends Factor implements AtomicArrayConvertible{
                 coe = BigInteger.valueOf(-1);
             }
 
-            monos.add(new Mono(coe, pow));
-            return monos;
+            atoms.add(new AtomicElement(coe, pow, null));
+            return atoms;
         } else {
             System.err.println("Invalid PowerFactor: " + getFactor());
             return null;

@@ -37,12 +37,12 @@ public class Operate {
         BigInteger rightCoe = right.getCoe();
         int leftPow = left.getVarsPow();
         int rightPow = right.getVarsPow();
-        return new Mono(leftCoe.multiply(rightCoe), leftPow + rightPow);
+        return new AtomicElement(leftCoe.multiply(rightCoe), leftPow + rightPow, null);
     }
 
-    private static Mono simpleAdd(Mono left, Mono right) {
+    private static AtomicElement simpleAdd(AtomicElement left, AtomicElement right) {
         if (left.getVarsPow() == right.getVarsPow()) {
-            return new Mono(left.getCoe().add(right.getCoe()), left.getVarsPow());
+            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getVarsPow());
         } else {
             return null;
         }
@@ -58,7 +58,7 @@ public class Operate {
             BigInteger totalCoefficient = monoList.stream()
                 .map(AtomicElement::getCoe)
                 .reduce(BigInteger.ZERO, BigInteger::add);
-            mergedMonos.add(new Mono(totalCoefficient, power)); // 添加合并后的结果
+            mergedMonos.add(new AtomicElement(totalCoefficient, power)); // 添加合并后的结果
         });
         return mergedMonos;
     }
@@ -78,48 +78,7 @@ public class Operate {
         return merged;
     }
 
-    /**
-     * <h2>构建三角函数的单项式</h2>
-     * 传入字符串类型的三角函数因子，得到三角函数类型的原子表达式
-     */
-    public static AtomicSinCos buildTrigonometryAtom(String trigonometryFactor) {
-        Factor innerFactor = FactorFactory.getFactor(getStrInOutermostBracket(trigonometryFactor));
 
-        // 解析指数
-        String pattern = "(sin)\\(" + innerFactor.getFactor() + "\\)\\^?(\\d+)?|(cos)\\(" + innerFactor.getFactor() + "\\)\\^?(\\d+)?";
-        Pattern re = Pattern.compile(pattern);
-        int expoent = 1;
-        Matcher m = re.matcher(trigonometryFactor);
-        if (m.matches()) {
-            if (m.group(1) != null) {
-                expoent = Integer.parseInt(m.group(1));
-            }
-        } else {
-            expoent = 0;
-        }
-
-        ArrayList<AtomicElement> innerMonos = innerFactor.getAtomicElement();
-        int length = innerMonos.size();
-        StringBuilder sb = new StringBuilder();
-        for (AtomicElement mono : innerMonos) {
-            sb.append(mono);
-            sb.append("+");
-        }
-        //最后一个mono为空不需要添加括号
-        if (innerMonos.get(length - 1).toString().isEmpty()) {
-            if (sb.length() > 0) {
-                sb.deleteCharAt(sb.length() - 1);
-            }
-        }
-        sb.append(innerMonos.get(length - 1));
-
-        if (sb.toString().isEmpty()) {
-            sb.append("0");
-        }
-        //化简+-和-+为-
-        sb.append(Operate.mergeSymbol(sb.toString()));
-        return new AtomicSinCos(BigInteger.ONE, expoent);
-    }
 
     public static String getStrInOutermostBracket(String s) {
         int inBracket = 0;
@@ -141,4 +100,14 @@ public class Operate {
         return null;
     }
 
+    public static boolean hashSameElement(ArrayList<Object> left, ArrayList<Object> right) {
+        if (left.size() != right.size()) {
+            return false;
+        }
+        if (left.getClass() != right.getClass()) {
+            return false;
+        }
+
+        return true;
+    }
 }
