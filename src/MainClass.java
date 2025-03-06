@@ -1,4 +1,5 @@
 import expr.Expr;
+import expr.RecursiveFuncFactor;
 import tools.Operate;
 
 import java.util.Scanner;
@@ -7,6 +8,12 @@ import java.util.regex.Pattern;
 public class MainClass {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
+        String n = sc.nextLine();
+        for (int i = 0; i < Integer.parseInt(n)*3; i++) {
+            String rule = sc.nextLine();
+            RecursiveFuncFactor.addRule(rule);
+        }
+
         String input = sc.nextLine();
         String s = Pattern.compile("[ \\t]").matcher(input).replaceAll("");
         s = Operate.mergeSymbol(s);
