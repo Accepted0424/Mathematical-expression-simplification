@@ -1,9 +1,7 @@
 package expr;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -14,29 +12,31 @@ import java.util.regex.Pattern;
 public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertible{
     // 一个表达式只包含0或1个递归函数，使用static变量存储递归函数的规则
     private static final Pattern ruleRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)=(.*)");
-    private static final Pattern factorRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)");
+    private static final Pattern factorRe = Pattern.compile("f\\{(\\d+|n)}\\((.*)\\)");
     private static final Map<String, String> funcRule = new HashMap<>();
-    private static String formalParam = "";
+    private static HashSet<String> formalParamList = new HashSet<>();
 
     public RecursiveFuncFactor(String func) {
         super(func);
     }
 
     public static void addRule (String func) {
-
         Matcher m = ruleRe.matcher(func);
         if (m.matches()) {
             String arguments = m.group(1);
-            formalParam = m.group(3).replaceAll(",", "");
+            String formalParam = m.group(2);
+            for (String param: formalParam.split(",")) {
+                if (!param.isEmpty()) {
+                    formalParamList.add(param);
+                } else {
+                    System.err.println("Invalid formal param: " + param);
+                }
+            }
             String expression = m.group(3);
             funcRule.put(arguments, expression);
         } else {
             System.err.println("Invalid recursive rule: " + func);
         }
-    }
-
-    public String getFormalParam() {
-        return formalParam;
     }
 
     @Override
@@ -47,8 +47,19 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             String args = m.group(1);
             int argsInt = Integer.parseInt(args);
             String actualParam = m.group(2);
+            ArrayList<String> actualParamList = new ArrayList<>();
+            for (String param: actualParam.split(",")){
+                Expr expr = new Expr(param);
+                actualParamList.add(expr.toString());
+            }
             if (funcRule.containsKey(args)) {
-                Expr expr = new Expr(funcRule.get(args));
+                String s = "";
+                int idx = 0;
+                for (String param: formalParamList) {
+                    s = funcRule.get(args).replaceAll(param, "(" + actualParamList.get(idx) + ")"); // 代入实参
+                    idx++;
+                }
+                Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
                 return atoms;
             } else {
@@ -57,8 +68,14 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 // f{4} = f{3} + f{2} = f{2} + f{1} + f{1} + f{0} = f{1} + f{0} + f{1} + f{1} + f{0}
                 String recSub1 = String.format("f{%d}", argsInt - 1);
                 String recSub2 = String.format("f{%d}", argsInt - 2);
-                String s = funcRule.get("n").replaceAll("f\\{n-1}", recSub1);
+                String s = funcRule.get("n").replaceAll("f\\{n-1}", recSub1); // 替换参数
                 s = s.replaceAll("f\\{n-2}", recSub2);
+                //System.out.println(getFormalParam());
+                int idx = 0;
+                for (String param : formalParamList) {
+                    s = s.replaceAll(param, "(" + actualParamList.get(idx) + ")"); // 代入实参
+                    idx++;
+                }
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
                 return atoms;

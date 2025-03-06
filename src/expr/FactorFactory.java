@@ -7,7 +7,7 @@ public class FactorFactory {
         Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
         Pattern powerRe = Pattern.compile("([+-]{0,2})x\\^?\\+?(\\d+)?");
         Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
-        Pattern recursiveFunRe = Pattern.compile("f\\{\\d+}\\([xy],?[xy]?\\)");
+        Pattern recursiveFunRe = Pattern.compile("f\\{\\d+}\\(.*\\)");
 
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);

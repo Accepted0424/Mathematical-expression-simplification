@@ -10,7 +10,7 @@ public class MainClass {
         Scanner sc = new Scanner(System.in);
         String n = sc.nextLine();
         for (int i = 0; i < Integer.parseInt(n)*3; i++) {
-            String rule = sc.nextLine();
+            String rule = sc.nextLine().replaceAll("[ \\t]", "");
             RecursiveFuncFactor.addRule(rule);
         }
 
@@ -30,8 +30,37 @@ public class MainClass {
 // sin(1)*x*sin(2) + sin(2-1)*sin(1+1)*x        Accepted
 // sin(1)*x*sin(2) + sin(2-1)*sin(1+0)*x        Accepted
 
-// 1
-// f{0}(x)=x
-// f{1}(x)=x^2
-// f{n}(x)=2*f{n-1}(x)-1*f{n-2}(x)
-// f{2}(x)+1
+/*
+1
+f{0}(x)=x
+f{1}(x)=x^2
+f{n}(x)=2*f{n-1}(x)-1*f{n-2}(x)
+f{2}(x)+1
+Accepted
+ */
+
+/*
+1
+f{0}(x)=x^2
+f{1}(x)=x+1
+f{n}(x)=f{n-1}(x^2)+f{n-2}(x-1)
+f{2}(x*2)
+result:8*x^2-4*x+2
+Accepted
+ */
+
+/*
+1
+f{0}(x,y)=y
+f{1}(x,y)=x
+f{n}(x,y)=f{n-1}(x,y)*y+f{n-2}(x,y)*x
+f{2}(x,y)
+ */
+
+/*
+1
+f{0}(x,y)=x+y
+f{1}(x,y)=x-y
+f{n}(x,y)=f{n-1}(x^2,y)+f{n-2}(y-x^2,x)
+f{2}(2*x,3*y)
+ */
