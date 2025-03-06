@@ -29,3 +29,9 @@ public class MainClass {
 // 3*sin(1+(x+1)^2)*sin(x+1) + 2*sin((1+x)^2+1) Accepted
 // sin(1)*x*sin(2) + sin(2-1)*sin(1+1)*x        Accepted
 // sin(1)*x*sin(2) + sin(2-1)*sin(1+0)*x        Accepted
+
+// 1
+// f{0}(x)=x
+// f{1}(x)=x^2
+// f{n}(x)=2*f{n-1}(x)-1*f{n-2}(x)
+// f{2}(x)+1

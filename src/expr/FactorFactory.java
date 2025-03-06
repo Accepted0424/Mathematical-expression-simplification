@@ -7,6 +7,7 @@ public class FactorFactory {
         Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
         Pattern powerRe = Pattern.compile("([+-]{0,2})x\\^?\\+?(\\d+)?");
         Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
+        Pattern recursiveFunRe = Pattern.compile("f\\{\\d+}\\([xy],?[xy]?\\)");
 
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);
@@ -14,6 +15,8 @@ public class FactorFactory {
             return new PowerFactor(s);
         } else if (s.contains("sin") || s.contains("cos")) {
             return new SinCosFactor(s);
+        } else if (recursiveFunRe.matcher(s).matches()) {
+            return new RecursiveFuncFactor(s);
         } else {
             // 匹配 ExprFactor
             // 加入嵌套括号之后匹配表达式因子需要特殊处理，不能直接使用正则表达式

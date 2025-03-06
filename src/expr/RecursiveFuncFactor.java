@@ -1,5 +1,6 @@
 package expr;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -12,7 +13,8 @@ import java.util.regex.Pattern;
 
 public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertible{
     // 一个表达式只包含0或1个递归函数，使用static变量存储递归函数的规则
-    private static final Pattern re = Pattern.compile("f\\{(\\d+\\)}\\(([xy],?[xy]?)\\)=(.*)");
+    private static final Pattern ruleRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)=(.*)");
+    private static final Pattern factorRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)");
     private static final Map<String, String> funcRule = new HashMap<>();
     private static String formalParam = "";
 
@@ -22,7 +24,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
 
     public static void addRule (String func) {
 
-        Matcher m = re.matcher(func);
+        Matcher m = ruleRe.matcher(func);
         if (m.matches()) {
             String arguments = m.group(1);
             formalParam = m.group(3).replaceAll(",", "");
@@ -40,13 +42,26 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
         ArrayList<AtomicElement> atoms = new ArrayList<>();
-        Matcher m = re.matcher(getFactor());
+        Matcher m = factorRe.matcher(getFactor());
         if (m.matches()) {
-            String arguments = m.group(1);
+            String args = m.group(1);
+            int argsInt = Integer.parseInt(args);
             String actualParam = m.group(2);
-            int key = Integer.parseInt(arguments);
-            if (funcRule.containsKey(key)) {
-
+            if (funcRule.containsKey(args)) {
+                Expr expr = new Expr(funcRule.get(args));
+                atoms.addAll(expr.getAtomicElements());
+                return atoms;
+            } else {
+                // 解析递推规则
+                // f{3} = f{2} + f{1} = f{1} + f{0} + f{1}
+                // f{4} = f{3} + f{2} = f{2} + f{1} + f{1} + f{0} = f{1} + f{0} + f{1} + f{1} + f{0}
+                String recSub1 = String.format("f{%d}", argsInt - 1);
+                String recSub2 = String.format("f{%d}", argsInt - 2);
+                String s = funcRule.get("n").replaceAll("f\\{n-1}", recSub1);
+                s = s.replaceAll("f\\{n-2}", recSub2);
+                Expr expr = new Expr(s);
+                atoms.addAll(expr.getAtomicElements());
+                return atoms;
             }
         } else {
             System.err.println("Invalid recursive function: " + getFactor());
