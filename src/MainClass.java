@@ -9,7 +9,7 @@ public class MainClass {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String n = sc.nextLine();
-        for (int i = 0; i < Integer.parseInt(n)*3; i++) {
+        for (int i = 0; i < Integer.parseInt(n) * 3; i++) {
             String rule = sc.nextLine().replaceAll("[ \\t]", "");
             RecursiveFuncFactor.addRule(rule);
         }
