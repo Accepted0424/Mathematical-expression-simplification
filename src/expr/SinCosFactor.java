@@ -116,20 +116,31 @@ public class SinCosFactor extends Factor {
 
     @Override
     public String toString() {
-        StringBuilder sb = new StringBuilder();
-        if (getTriType() == 1) {
-            sb.append("sin");
-        } else if (getTriType() == 2) {
-            sb.append("cos");
-        }
-        sb.append("(");
-        for (AtomicElement atom : innerMonos) {
-            sb.append(atom);
-            if (innerMonos.indexOf(atom) != innerMonos.size() - 1) {
-                sb.append("+");
+        if (innerMonos.isEmpty()) {
+            return "";
+        } else {
+            StringBuilder sb = new StringBuilder();
+            if (getTriType() == 1) {
+                sb.append("sin");
+            } else if (getTriType() == 2) {
+                sb.append("cos");
             }
+            sb.append("(");
+            StringBuilder innerSb = new StringBuilder();
+            for (AtomicElement atom : innerMonos) {
+                if (!atom.toString().isEmpty()) {
+                    innerSb.append(atom);
+                    if (innerMonos.indexOf(atom) != innerMonos.size() - 1) {
+                        innerSb.append("+");
+                    }
+                }
+            }
+            if (innerSb.toString().isEmpty()) {
+                return "";
+            }
+            sb.append(innerSb.toString());
+            sb.append(")");
+            return sb.toString();
         }
-        sb.append(")");
-        return sb.toString();
     }
 }

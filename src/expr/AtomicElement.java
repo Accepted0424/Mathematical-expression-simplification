@@ -170,15 +170,19 @@ public class AtomicElement {
                 }
             }
             for (String sinCosFactor : map.keySet()) {
-                if (map.get(sinCosFactor) == 1) {
-                    triString.append(sinCosFactor).append("*");
-                } else {
-                    triString.append(sinCosFactor)
-                             .append("^")
-                             .append(map.get(sinCosFactor))
-                             .append("*");
+                if (!sinCosFactor.toString().isEmpty()) {
+                    if (map.get(sinCosFactor) == 1) {
+                        triString.append(sinCosFactor).append("*");
+                    } else {
+                        triString.append(sinCosFactor)
+                                .append("^")
+                                .append(map.get(sinCosFactor))
+                                .append("*");
+                    }
                 }
             }
+        }
+        if (!triString.toString().isEmpty()) {
             triString.deleteCharAt(triString.length() - 1);
         }
         return coeString + powXString + powYString + triString;

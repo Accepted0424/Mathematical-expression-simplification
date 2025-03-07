@@ -11,7 +11,7 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible {
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
 
-    private static final String patternTerm = "\\^?\\+?(\\d+)?"; //捕获括号内内容和指数
+    private static final String patternTerm = "[+-]?\\^?\\+?(\\d+)?"; //捕获括号内内容和指数
     private static final Pattern re = Pattern.compile(patternTerm);
 
     public ExprFactor(String factor) {
@@ -24,7 +24,7 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible {
         String s = getFactor();
         int start = 0;
         int inBracket = 0;
-        for (int i = 0; i <= s.length(); i++) {
+        for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             // 获取最外层括号内的内容
             if (c == '(') {

@@ -61,6 +61,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                         actualParamsList.add(actualParam.substring(start, i));
                         actualParamsList.add(actualParam.substring(i + 1));
                     }
+                    actualParamsList.add(actualParam);
                 }
             }
             ArrayList<String> actualParamList = new ArrayList<>();
