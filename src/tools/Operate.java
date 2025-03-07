@@ -11,20 +11,20 @@ public class Operate {
         ArrayList<AtomicElement> mergedLeft = merge(left);
         ArrayList<AtomicElement> mergedRight = merge(right);
 
-        ArrayList<AtomicElement> monos = new ArrayList<>();
+        ArrayList<AtomicElement> atoms = new ArrayList<>();
         for (AtomicElement l: mergedLeft) {
             for (AtomicElement r: mergedRight) {
-                monos.add(simpleMul(l,r));
+                atoms.add(simpleMul(l,r));
             }
         }
-        return monos;
+        return atoms;
     }
 
     public static ArrayList<AtomicElement> add(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
-        ArrayList<AtomicElement> addedMonos = new ArrayList<>();
-        addedMonos.addAll(left);
-        addedMonos.addAll(right);
-        return merge(addedMonos);
+        ArrayList<AtomicElement> addedAtoms = new ArrayList<>();
+        addedAtoms.addAll(left);
+        addedAtoms.addAll(right);
+        return merge(addedAtoms);
     }
 
     private static AtomicElement simpleMul(AtomicElement left, AtomicElement right) {
@@ -34,9 +34,18 @@ public class Operate {
         int rightXPow = right.getXPow();
         int leftYPow = left.getYPow();
         int rightYPow = right.getYPow();
-        ArrayList<SinCosFactor> triFactors = left.getTriFactors();
+        ArrayList<SinCosFactor> triFactors = new ArrayList<>();
+        triFactors.addAll(left.getTriFactors());
         triFactors.addAll(right.getTriFactors());
-        return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, triFactors);
+        if (!left.getTriFactors().isEmpty() && !right.getTriFactors().isEmpty()) {
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, triFactors);
+        } else if (!left.getTriFactors().isEmpty()) {
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, left.getTriFactors());
+        }else if (!right.getTriFactors().isEmpty()) {
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, right.getTriFactors());
+        }else {
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, null);
+        }
     }
 
     private static AtomicElement simpleAdd(AtomicElement left, AtomicElement right) {

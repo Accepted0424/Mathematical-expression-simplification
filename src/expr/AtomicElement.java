@@ -2,6 +2,7 @@ package expr;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class AtomicElement {
@@ -18,6 +19,7 @@ public class AtomicElement {
         this.yPow = yPow;
         if (triFactors != null) {
             this.triFactors.addAll(triFactors);
+            this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
         }
     }
 
@@ -168,7 +170,11 @@ public class AtomicElement {
                 }
             }
             for (String sinCosFactor : map.keySet()) {
-                triString.append(sinCosFactor).append("^").append(map.get(sinCosFactor)).append("*");
+                if (map.get(sinCosFactor) == 1) {
+                    triString.append(sinCosFactor).append("*");
+                } else {
+                    triString.append(sinCosFactor).append("^").append(map.get(sinCosFactor)).append("*");
+                }
             }
             triString.deleteCharAt(triString.length() - 1);
         }

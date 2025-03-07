@@ -69,6 +69,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 String recSub2 = String.format("f{%d}", argsInt - 2);
                 String s = funcRule.get("n").replaceAll("f\\{n-1}", recSub1); // 替换参数
                 s = s.replaceAll("f\\{n-2}", recSub2);
+
                 //System.out.println(getFormalParam());
                 int idx = 0;
                 for (String param : formalParamList) {
