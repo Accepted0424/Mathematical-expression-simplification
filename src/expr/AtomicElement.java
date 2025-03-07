@@ -2,6 +2,7 @@ package expr;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class AtomicElement {
     // coe * x^xPow * sin(expr) * ... * cos(expr) * ...
@@ -76,7 +77,19 @@ public class AtomicElement {
         if (this.triFactors.size() != that.triFactors.size()) {
             return false;
         }
-        return getTriFactorsStr().equals(that.getTriFactorsStr());
+        for (SinCosFactor thisFactor : this.triFactors) {
+            boolean has = false;
+            for (SinCosFactor thatFactor : that.triFactors) {
+                if (thisFactor.toString().equals(thatFactor.toString())) {
+                    has = true;
+                    break;
+                }
+            }
+            if (!has) {
+                return false;
+            }
+        }
+        return true;
     }
 
     @Override
@@ -146,14 +159,20 @@ public class AtomicElement {
         }
 
         if (!triFactors.isEmpty()) {
+            HashMap<String, Integer> map = new HashMap<>();
             for (int i = 0; i < triFactors.size(); i++) {
-                triString.append(triFactors.get(i).toString());
-                if (i != triFactors.size() - 1) {
-                    triString.append("*");
+                if (!map.containsKey(triFactors.get(i).toString())) {
+                    map.put(triFactors.get(i).toString(), 1);
+                } else {
+                    map.put(triFactors.get(i).toString(), map.get(triFactors.get(i).toString()) + 1);
                 }
             }
+            for (String sinCosFactor : map.keySet()) {
+                triString.append(sinCosFactor).append("^").append(map.get(sinCosFactor)).append("*");
+            }
+            triString.deleteCharAt(triString.length() - 1);
         }
-        return coeString + powXString + powYString + triString.toString();
+        return coeString + powXString + powYString + triString;
     }
 
 }

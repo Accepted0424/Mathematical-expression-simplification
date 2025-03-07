@@ -7,13 +7,15 @@ public class FactorFactory {
         Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
         Pattern powerRe = Pattern.compile("([+-]{0,2})[xy]\\^?\\+?(\\d+)?");
         Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
+        Pattern sinRe = Pattern.compile("sin\\(.*\\)\\^?(\\d+)?");
+        Pattern costRe = Pattern.compile("cos\\(.*\\)\\^?(\\d+)?");
         Pattern recursiveFunRe = Pattern.compile("f\\{\\d+}\\(.*\\)");
 
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);
         } else if (powerRe.matcher(s).matches()) {
             return new PowerFactor(s);
-        } else if (s.contains("sin") || s.contains("cos")) {
+        } else if (sinRe.matcher(s).matches() || costRe.matcher(s).matches()) {
             return new SinCosFactor(s);
         } else if (recursiveFunRe.matcher(s).matches()) {
             return new RecursiveFuncFactor(s);

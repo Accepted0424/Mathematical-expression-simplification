@@ -11,13 +11,18 @@ import java.util.regex.Pattern;
 
 public class SinCosFactor extends Factor {
     // example: sin(x) cos(x) sin(x^2)^2 cos(x+1)^2 sin((x+1)*2)^2
-    private final static String pattern = "sin\\^?(\\d+)?|cos\\^?(\\d+)?";
-    private final static Pattern re = Pattern.compile(pattern);
+    private final static Pattern sinRe = Pattern.compile("sin\\^?(\\d+)?");
+    private final static Pattern cosRe = Pattern.compile("cos\\^?(\\d+)?");
     private ArrayList<AtomicElement> innerMonos = new ArrayList<>();
+    private int pow = 1;
 
     public SinCosFactor(String factor) {
         super(factor);
         extractInnerMono();
+    }
+
+    public int getPow() {
+        return pow;
     }
 
     public ArrayList<AtomicElement> getInnerMono() {
@@ -32,6 +37,7 @@ public class SinCosFactor extends Factor {
             innerMonos = expr.getAtomicElements();
             innerMonos.sort(Comparator.comparing(AtomicElement::getCoe));
             innerMonos.sort(Comparator.comparing(AtomicElement::getXPow));
+            innerMonos.sort(Comparator.comparing(AtomicElement::getYPow));
         } else {
             System.err.println("Invalid SinCosFactor: " + getFactor());
         }
@@ -68,6 +74,9 @@ public class SinCosFactor extends Factor {
         if (this.getTriType() != that.getTriType()) {
             return false;
         }
+        if (this.getPow() != that.getPow()) {
+            return false;
+        }
         return this.hasSameAtomElement(that);
     }
 
@@ -77,11 +86,16 @@ public class SinCosFactor extends Factor {
         Map.Entry<String, String> extracted = Operate.getStrInOutermostBracket(getFactor());
         if (extracted != null) {
             String outerStr = extracted.getValue();
-            Matcher m = re.matcher(outerStr);
-            if (m.matches()) {
+            Matcher sinMc = sinRe.matcher(outerStr);
+            Matcher cosMc = cosRe.matcher(outerStr);
+            if (sinMc.matches() || cosMc.matches()) {
                 int exponent = 1;
-                if (m.group(1) != null) {
-                    exponent = Integer.parseInt(m.group(1));
+                if (sinMc.matches() && sinMc.group(1) != null) {
+                    exponent = Integer.parseInt(sinMc.group(1));
+                    pow = exponent;
+                } else if (cosMc.matches() && cosMc.group(1) != null) {
+                    exponent = Integer.parseInt(cosMc.group(1));
+                    pow = exponent;
                 }
                 ArrayList<SinCosFactor> triFactors = new ArrayList<>();
                 triFactors.add(this);
