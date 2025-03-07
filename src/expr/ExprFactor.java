@@ -28,14 +28,18 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible{
             char c = s.charAt(i);
             // 获取最外层括号内的内容
             if (c == '(') {
+                if (inBracket == 0) {
+                    start = i;
+                }
                 inBracket++;
             } else if (c == ')') {
                 inBracket--;
             }
             // 判断是否符合表达式因子的格式
-            if (inBracket == 0) {
+            if (inBracket == 0 && i > start + 1) {
                 String remaining = s.substring(0, start) + s.substring(i + 1);
-                String innerExpr = s.substring(start+1, i);
+                String innerExpr = s.substring(start + 1, i);
+
                 Matcher m = re.matcher(remaining);
                 if (m.matches()) {
                     Expr expr = new Expr(innerExpr);
