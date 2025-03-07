@@ -6,8 +6,8 @@ import java.util.regex.Pattern;
 public abstract class Factor implements AtomicArrayConvertible {
     private final String factor;
     private int triType = 0;
-    private Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?(\\d+)?");
-    private Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?(\\d+)?");
+    private Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?[+-]?(\\d+)?");
+    private Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?[+-]?(\\d+)?");
 
     public Factor(String factor) {
         this.factor = factor;

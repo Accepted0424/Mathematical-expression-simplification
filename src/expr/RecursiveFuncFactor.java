@@ -46,8 +46,25 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             String args = m.group(1);
             int argsInt = Integer.parseInt(args);
             String actualParam = m.group(2);
+            int start = 0;
+            int inBracket = 0;
+            ArrayList<String> actualParamsList = new ArrayList<>();
+            for (int i = 0; i < actualParam.length(); i++) {
+                char c = actualParam.charAt(i);
+                if (c == '(') {
+                    inBracket++;
+                } else if (c == ')') {
+                    inBracket--;
+                }
+                if (inBracket == 0) {
+                    if (c == ',') {
+                        actualParamsList.add(actualParam.substring(start, i));
+                        actualParamsList.add(actualParam.substring(i + 1));
+                    }
+                }
+            }
             ArrayList<String> actualParamList = new ArrayList<>();
-            for (String param: actualParam.split(",")) {
+            for (String param: actualParamsList) {
                 Expr expr = new Expr(param);
                 actualParamList.add(expr.toString());
             }

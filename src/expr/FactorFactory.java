@@ -7,8 +7,8 @@ public class FactorFactory {
         Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
         Pattern powerRe = Pattern.compile("([+-]{0,2})[xy]\\^?\\+?(\\d+)?");
         Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
-        Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?(\\d+)?");
-        Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?(\\d+)?");
+        Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?[+-]?(\\d+)?");
+        Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?[+-]?(\\d+)?");
         Pattern recursiveFunRe = Pattern.compile("[+-]?f\\{\\d+}\\(.*\\)");
 
         if (constRe.matcher(s).matches()) {

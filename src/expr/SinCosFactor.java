@@ -11,8 +11,8 @@ import java.util.regex.Pattern;
 
 public class SinCosFactor extends Factor {
     // example: sin(x) cos(x) sin(x^2)^2 cos(x+1)^2 sin((x+1)*2)^2
-    private static final Pattern sinRe = Pattern.compile("[+-]?sin\\^?(\\d+)?");
-    private static final Pattern cosRe = Pattern.compile("[+-]?cos\\^?(\\d+)?");
+    private static final Pattern sinRe = Pattern.compile("[+-]?sin\\^?[+-]?(\\d+)?");
+    private static final Pattern cosRe = Pattern.compile("[+-]?cos\\^?[+-]?(\\d+)?");
     private ArrayList<AtomicElement> innerMonos = new ArrayList<>();
     private int pow = 1;
 
