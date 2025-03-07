@@ -8,22 +8,22 @@ import java.util.HashMap;
 public class AtomicElement {
     // coe * x^xPow * sin(expr) * ... * cos(expr) * ...
     private BigInteger coe;
-    private final int xPow;
-    private final int yPow;
+    private final int xsPow;
+    private final int ysPow;
     // 已化简的三角函数因子
     private final ArrayList<SinCosFactor> triFactors = new ArrayList<>();
 
-    public AtomicElement(BigInteger coe, int xPow, int yPow, ArrayList<SinCosFactor> triFactors) {
+    public AtomicElement(BigInteger coe, int xsPow, int ysPow, ArrayList<SinCosFactor> triFactors) {
         this.coe = coe;
-        this.xPow = xPow;
-        this.yPow = yPow;
+        this.xsPow = xsPow;
+        this.ysPow = ysPow;
         if (triFactors != null) {
             this.triFactors.addAll(triFactors);
             this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
         }
     }
 
-    public void inverseCoe(){
+    public void inverseCoe() {
         this.coe = coe.negate();
     }
 
@@ -32,11 +32,11 @@ public class AtomicElement {
     }
 
     public int getXPow() {
-        return xPow;
+        return xsPow;
     }
 
     public int getYPow() {
-        return yPow;
+        return ysPow;
     }
 
     public ArrayList<SinCosFactor> getTriFactors() {
@@ -56,7 +56,7 @@ public class AtomicElement {
     }
 
     @Override
-    public boolean equals (Object x) {
+    public boolean equals(Object x) {
         if (x == null) {
             return false;
         }
@@ -99,7 +99,6 @@ public class AtomicElement {
         String powXString = "";
         String powYString = "";
         String coeString = "";
-        StringBuilder triString = new StringBuilder();
 
         if (getCoe().equals(BigInteger.ZERO)) {
             return "";
@@ -143,7 +142,7 @@ public class AtomicElement {
 
         if (getYPow() == 0) {
             // 后面为空
-            if(getTriFactors().isEmpty()) {
+            if (getTriFactors().isEmpty()) {
                 powYString = "";
                 if (coeString.isEmpty() && powXString.isEmpty()) {
                     powYString = "1";
@@ -160,6 +159,7 @@ public class AtomicElement {
             powYString = "y^" + getYPow();
         }
 
+        StringBuilder triString = new StringBuilder();
         if (!triFactors.isEmpty()) {
             HashMap<String, Integer> map = new HashMap<>();
             for (int i = 0; i < triFactors.size(); i++) {
@@ -173,7 +173,10 @@ public class AtomicElement {
                 if (map.get(sinCosFactor) == 1) {
                     triString.append(sinCosFactor).append("*");
                 } else {
-                    triString.append(sinCosFactor).append("^").append(map.get(sinCosFactor)).append("*");
+                    triString.append(sinCosFactor)
+                             .append("^")
+                             .append(map.get(sinCosFactor))
+                             .append("*");
                 }
             }
             triString.deleteCharAt(triString.length() - 1);

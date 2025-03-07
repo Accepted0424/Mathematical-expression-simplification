@@ -1,7 +1,8 @@
 package expr;
 
-import java.math.BigInteger;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -9,7 +10,7 @@ import java.util.regex.Pattern;
 // f{1}(x) = sin(x)                     f{1}(x,y) = sin(x+y)
 // f{n}(x) = cos(x)*f{n-1} + x*f{n-2}   f{n}(x,y) = x*f{n-1} + y*f{n-2}
 
-public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertible{
+public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertible {
     // 一个表达式只包含0或1个递归函数，使用static变量存储递归函数的规则
     private static final Pattern ruleRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)=(.*)");
     private static final Pattern factorRe = Pattern.compile("f\\{(\\d+|n)}\\((.*)\\)");
@@ -20,7 +21,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
         super(func);
     }
 
-    public static void addRule (String func) {
+    public static void addRule(String func) {
         Matcher m = ruleRe.matcher(func);
         if (m.matches()) {
             String arguments = m.group(1);
@@ -46,7 +47,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             int argsInt = Integer.parseInt(args);
             String actualParam = m.group(2);
             ArrayList<String> actualParamList = new ArrayList<>();
-            for (String param: actualParam.split(",")){
+            for (String param: actualParam.split(",")) {
                 Expr expr = new Expr(param);
                 actualParamList.add(expr.toString());
             }

@@ -38,13 +38,13 @@ public class Operate {
         triFactors.addAll(left.getTriFactors());
         triFactors.addAll(right.getTriFactors());
         if (!left.getTriFactors().isEmpty() && !right.getTriFactors().isEmpty()) {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, triFactors);
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, triFactors);
         } else if (!left.getTriFactors().isEmpty()) {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, left.getTriFactors());
-        }else if (!right.getTriFactors().isEmpty()) {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, right.getTriFactors());
-        }else {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, null);
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, left.getTriFactors());
+        } else if (!right.getTriFactors().isEmpty()) {
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, right.getTriFactors());
+        } else {
+            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, null);
         }
     }
 

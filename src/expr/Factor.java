@@ -6,7 +6,7 @@ public abstract class Factor implements AtomicArrayConvertible {
 
     public Factor(String factor) {
         this.factor = factor;
-        this.triType = factor.contains("cos")?2:factor.contains("sin")?1:0;
+        this.triType = factor.contains("cos") ? 2 : factor.contains("sin") ? 1 : 0;
     }
 
     public String getFactor() {

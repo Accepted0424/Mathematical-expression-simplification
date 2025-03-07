@@ -2,11 +2,10 @@ package expr;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PowerFactor extends Factor implements AtomicArrayConvertible{
+public class PowerFactor extends Factor implements AtomicArrayConvertible {
     //带x的均为变量因子
     //example: x x^2
     private static final String patternTerm = "([+-]{0,2})([xy])\\^?\\+?(\\d+)?";

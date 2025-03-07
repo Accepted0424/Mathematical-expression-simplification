@@ -37,7 +37,7 @@ public class FactorFactory {
                 }
                 // 删去最外层括号内的所有内容之后，判断是否符合表达式因子的格式
                 if (inBracket == 0) {
-                    String remaining = s.substring(0,start) + s.substring(i+1);
+                    String remaining = s.substring(0,start) + s.substring(i + 1);
                     if (exprNoBracketRe.matcher(remaining).matches()) {
                         return new ExprFactor(s);
                     }
