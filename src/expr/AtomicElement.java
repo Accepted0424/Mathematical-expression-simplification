@@ -1,22 +1,20 @@
 package expr;
 
-import tools.Operate;
-
 import java.math.BigInteger;
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Objects;
 
 public class AtomicElement {
-    // coe * x^varsPow * sin(expr) * ... * cos(expr) * ...
+    // coe * x^xPow * sin(expr) * ... * cos(expr) * ...
     private BigInteger coe;
-    private final int varsPow;
+    private final int xPow;
+    private final int yPow;
     // 已化简的三角函数因子
     private final ArrayList<SinCosFactor> triFactors = new ArrayList<>();
 
-    public AtomicElement(BigInteger coe, int varsPow, ArrayList<SinCosFactor> triFactors) {
+    public AtomicElement(BigInteger coe, int xPow, int yPow, ArrayList<SinCosFactor> triFactors) {
         this.coe = coe;
-        this.varsPow = varsPow;
+        this.xPow = xPow;
+        this.yPow = yPow;
         if (triFactors != null) {
             this.triFactors.addAll(triFactors);
         }
@@ -30,8 +28,12 @@ public class AtomicElement {
         return coe;
     }
 
-    public int getVarsPow() {
-        return varsPow;
+    public int getXPow() {
+        return xPow;
+    }
+
+    public int getYPow() {
+        return yPow;
     }
 
     public ArrayList<SinCosFactor> getTriFactors() {
@@ -65,7 +67,10 @@ public class AtomicElement {
         if (!this.getCoe().equals(that.getCoe())) {
             return false;
         }
-        if (this.getVarsPow() != that.getVarsPow()) {
+        if (this.getXPow() != that.getXPow()) {
+            return false;
+        }
+        if (this.getYPow() != that.getYPow()) {
             return false;
         }
         if (this.triFactors.size() != that.triFactors.size()) {
@@ -76,7 +81,8 @@ public class AtomicElement {
 
     @Override
     public String toString() {
-        String powString = "";
+        String powXString = "";
+        String powYString = "";
         String coeString = "";
         StringBuilder triString = new StringBuilder();
 
@@ -84,32 +90,59 @@ public class AtomicElement {
             return "";
         } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.valueOf(1))) {
             coeString = "";
+            // -1*x*y*sin(x) = -x*y*sin(x)
             if (getCoe().equals(BigInteger.valueOf(-1))) {
                 coeString = "-";
             }
-            if (getVarsPow() == 0) {
+            // -1*_*_=-1
+            if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
                 coeString = String.valueOf(getCoe());
             }
         } else {
             coeString = getCoe() + "*";
-            if (getVarsPow() == 0) {
+            // 2*_*_*_
+            if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
                 coeString = getCoe() + "";
             }
         }
 
-        if (getVarsPow() == 0) {
-            if(!getTriFactors().isEmpty() && !getCoe().equals(BigInteger.ONE)) {
-                powString = "*";
+        if (getXPow() == 0) {
+            // 后面为空
+            if (getYPow() == 0 && getTriFactors().isEmpty()) {
+                powXString = "";
+                // 前面为空
+                if (coeString.isEmpty()) {
+                    powXString = "1";
+                }
             } else {
-                powString = "";
+                powXString = "";
             }
-        } else if (getVarsPow() == 1) {
-            powString = "x";
-            if (!getTriFactors().isEmpty()) {
-                powString = "x*";
+        } else if (getXPow() == 1) {
+            powXString = "x*";
+            if (getTriFactors().isEmpty() && getYPow() == 0) {
+                powXString = "x";
             }
         } else {
-            powString = "x^" + getVarsPow();
+            powXString = "x^" + getXPow();
+        }
+
+        if (getYPow() == 0) {
+            // 后面为空
+            if(getTriFactors().isEmpty()) {
+                powYString = "";
+                if (coeString.isEmpty() && powXString.isEmpty()) {
+                    powYString = "1";
+                }
+            } else {
+                powYString = "";
+            }
+        } else if (getYPow() == 1) {
+            powYString = "y*";
+            if (getTriFactors().isEmpty()) {
+                powYString = "y";
+            }
+        } else {
+            powYString = "y^" + getYPow();
         }
 
         if (!triFactors.isEmpty()) {
@@ -120,7 +153,7 @@ public class AtomicElement {
                 }
             }
         }
-        return coeString + powString + triString.toString();
+        return coeString + powXString + powYString + triString.toString();
     }
 
 }

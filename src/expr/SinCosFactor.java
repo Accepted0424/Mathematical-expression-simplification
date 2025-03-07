@@ -31,7 +31,7 @@ public class SinCosFactor extends Factor {
             expr = new Expr(extracted.getKey());
             innerMonos = expr.getAtomicElements();
             innerMonos.sort(Comparator.comparing(AtomicElement::getCoe));
-            innerMonos.sort(Comparator.comparing(AtomicElement::getVarsPow));
+            innerMonos.sort(Comparator.comparing(AtomicElement::getXPow));
         } else {
             System.err.println("Invalid SinCosFactor: " + getFactor());
         }
@@ -88,7 +88,7 @@ public class SinCosFactor extends Factor {
                 for (int i = 0; i < exponent - 1; i++) {
                     triFactors.add(this);
                 }
-                atoms.add(new AtomicElement(BigInteger.ONE, 0, triFactors));
+                atoms.add(new AtomicElement(BigInteger.ONE, 0,0, triFactors));
                 return atoms;
             } else {
                 System.err.println("Invalid SinCosFactor: " + getFactor());

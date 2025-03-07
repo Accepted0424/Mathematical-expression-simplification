@@ -4,9 +4,6 @@ import expr.*;
 
 import java.math.BigInteger;
 import java.util.*;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
-import java.util.stream.Collectors;
 
 public class Operate {
     public static ArrayList<AtomicElement> mul(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
@@ -33,18 +30,20 @@ public class Operate {
     private static AtomicElement simpleMul(AtomicElement left, AtomicElement right) {
         BigInteger leftCoe = left.getCoe();
         BigInteger rightCoe = right.getCoe();
-        int leftPow = left.getVarsPow();
-        int rightPow = right.getVarsPow();
+        int leftXPow = left.getXPow();
+        int rightXPow = right.getXPow();
+        int leftYPow = left.getYPow();
+        int rightYPow = right.getYPow();
         ArrayList<SinCosFactor> triFactors = left.getTriFactors();
         triFactors.addAll(right.getTriFactors());
-        return new AtomicElement(leftCoe.multiply(rightCoe), leftPow + rightPow, triFactors);
+        return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow+rightYPow, triFactors);
     }
 
     private static AtomicElement simpleAdd(AtomicElement left, AtomicElement right) {
-        if (left.getVarsPow() == right.getVarsPow() && left.getTriFactorsStr().equals(right.getTriFactorsStr())) {
-            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getVarsPow(), left.getTriFactors());
-        } else if (left.getVarsPow() == right.getVarsPow()) {
-            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getVarsPow(), null);
+        if (left.getXPow() == right.getXPow() && left.getYPow() == right.getYPow() && left.getTriFactorsStr().equals(right.getTriFactorsStr())) {
+            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getXPow(), left.getYPow(), left.getTriFactors());
+        } else if (left.getXPow() == right.getXPow() && left.getYPow() == right.getYPow()) {
+            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getXPow(), left.getYPow(), null);
         }
         else {
             return null;
@@ -55,7 +54,7 @@ public class Operate {
     public static ArrayList<AtomicElement> merge(ArrayList<AtomicElement> atoms) {
         HashMap<String, AtomicElement> map = new HashMap<>();
         for (AtomicElement atom: atoms) {
-            String key = atom.getVarsPow() + "_" + atom.getTriFactorsStr();
+            String key = atom.getXPow() + "_" + atom.getTriFactorsStr();
             if (map.containsKey(key)) {
                 AtomicElement merged = simpleAdd(map.get(key), atom);
                 if (merged != null) {

@@ -5,7 +5,7 @@ import java.util.regex.Pattern;
 public class FactorFactory {
     public static Factor getFactor(String s) {
         Pattern constRe = Pattern.compile("[+-]{0,2}\\d+");
-        Pattern powerRe = Pattern.compile("([+-]{0,2})x\\^?\\+?(\\d+)?");
+        Pattern powerRe = Pattern.compile("([+-]{0,2})[xy]\\^?\\+?(\\d+)?");
         Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
         Pattern recursiveFunRe = Pattern.compile("f\\{\\d+}\\(.*\\)");
 

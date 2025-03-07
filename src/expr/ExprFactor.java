@@ -51,7 +51,7 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible{
                         } else {
                             // 指数为0直接返回1
                             monos.clear();
-                            monos.add(new AtomicElement(BigInteger.ONE, 0,null));
+                            monos.add(new AtomicElement(BigInteger.ONE, 0,0,null));
                         }
                     }
                     return Operate.merge(monos);
