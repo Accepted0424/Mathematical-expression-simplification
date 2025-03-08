@@ -11,6 +11,7 @@ public class MainClass {
         String n = sc.nextLine();
         for (int i = 0; i < Integer.parseInt(n) * 3; i++) {
             String rule = sc.nextLine().replaceAll("[ \\t]", "");
+            rule = Operate.mergeSymbol(rule);
             RecursiveFuncFactor.addRule(rule);
         }
 

@@ -126,19 +126,18 @@ public class SinCosFactor extends Factor {
                 sb.append("cos");
             }
             sb.append("(");
-            StringBuilder innerSb = new StringBuilder();
+            sb.append("(");
             for (AtomicElement atom : innerMonos) {
-                if (!atom.toString().isEmpty()) {
-                    innerSb.append(atom);
-                    if (innerMonos.indexOf(atom) != innerMonos.size() - 1) {
-                        innerSb.append("+");
-                    }
+                if (atom.getCoe().equals(BigInteger.ZERO)) {
+                    sb.append("0");
+                } else {
+                    sb.append(atom);
+                }
+                if (innerMonos.indexOf(atom) != innerMonos.size() - 1) {
+                    sb.append("+");
                 }
             }
-            if (innerSb.toString().isEmpty()) {
-                return "";
-            }
-            sb.append(innerSb.toString());
+            sb.append(")");
             sb.append(")");
             return sb.toString();
         }

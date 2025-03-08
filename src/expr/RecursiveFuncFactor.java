@@ -56,11 +56,11 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 } else if (c == ')') {
                     inBracket--;
                 }
-                if (inBracket == 0) {
-                    if (c == ',') {
-                        actualParamsList.add(actualParam.substring(start, i));
-                        actualParamsList.add(actualParam.substring(i + 1));
-                    }
+                if (inBracket == 0 && c == ',') {
+                    actualParamsList.add(actualParam.substring(start, i));
+                    actualParamsList.add(actualParam.substring(i + 1));
+                    break;
+                } else if (i == actualParam.length() - 1) {
                     actualParamsList.add(actualParam);
                 }
             }

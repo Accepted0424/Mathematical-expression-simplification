@@ -137,7 +137,11 @@ public class AtomicElement {
                 powXString = "x";
             }
         } else {
-            powXString = "x^" + getXPow();
+            if (getYPow() == 0 && getTriFactors().isEmpty()) {
+                powXString = "x^" + getXPow();
+            } else {
+                powXString = "x^" + getXPow() + "*";
+            }
         }
 
         if (getYPow() == 0) {
