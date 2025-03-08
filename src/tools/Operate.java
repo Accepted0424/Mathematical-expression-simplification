@@ -1,12 +1,17 @@
 package tools;
 
-import expr.*;
+import expr.AtomicElement;
+import expr.SinCosFactor;
 
 import java.math.BigInteger;
-import java.util.*;
+import java.util.AbstractMap;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Operate {
-    public static ArrayList<AtomicElement> mul(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
+    public static ArrayList<AtomicElement>
+        mul(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
         //先合并同类相
         ArrayList<AtomicElement> mergedLeft = merge(left);
         ArrayList<AtomicElement> mergedRight = merge(right);
@@ -20,7 +25,8 @@ public class Operate {
         return atoms;
     }
 
-    public static ArrayList<AtomicElement> add(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
+    public static ArrayList<AtomicElement>
+        add(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
         ArrayList<AtomicElement> addedAtoms = new ArrayList<>();
         addedAtoms.addAll(left);
         addedAtoms.addAll(right);
@@ -38,21 +44,29 @@ public class Operate {
         triFactors.addAll(left.getTriFactors());
         triFactors.addAll(right.getTriFactors());
         if (!left.getTriFactors().isEmpty() && !right.getTriFactors().isEmpty()) {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, triFactors);
+            return new AtomicElement(leftCoe.multiply(rightCoe),
+                    leftXPow + rightXPow,leftYPow + rightYPow, triFactors);
         } else if (!left.getTriFactors().isEmpty()) {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, left.getTriFactors());
+            return new AtomicElement(leftCoe.multiply(rightCoe),
+                    leftXPow + rightXPow,leftYPow + rightYPow, left.getTriFactors());
         } else if (!right.getTriFactors().isEmpty()) {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, right.getTriFactors());
+            return new AtomicElement(leftCoe.multiply(rightCoe),
+                    leftXPow + rightXPow,leftYPow + rightYPow, right.getTriFactors());
         } else {
-            return new AtomicElement(leftCoe.multiply(rightCoe), leftXPow + rightXPow,leftYPow + rightYPow, null);
+            return new AtomicElement(leftCoe.multiply(rightCoe),
+                    leftXPow + rightXPow,leftYPow + rightYPow, null);
         }
     }
 
     private static AtomicElement simpleAdd(AtomicElement left, AtomicElement right) {
-        if (left.getXPow() == right.getXPow() && left.getYPow() == right.getYPow() && left.getTriFactorsStr().equals(right.getTriFactorsStr())) {
-            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getXPow(), left.getYPow(), left.getTriFactors());
+        if (left.getXPow() == right.getXPow() &&
+            left.getYPow() == right.getYPow() &&
+            left.getTriFactorsStr().equals(right.getTriFactorsStr())) {
+            return new AtomicElement(left.getCoe().add(right.getCoe()),
+                    left.getXPow(), left.getYPow(), left.getTriFactors());
         } else if (left.getXPow() == right.getXPow() && left.getYPow() == right.getYPow()) {
-            return new AtomicElement(left.getCoe().add(right.getCoe()), left.getXPow(), left.getYPow(), null);
+            return new AtomicElement(left.getCoe().add(right.getCoe()),
+                    left.getXPow(), left.getYPow(), null);
         }
         else {
             return null;

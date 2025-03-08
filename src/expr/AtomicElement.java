@@ -99,32 +99,25 @@ public class AtomicElement {
         String powXString = "";
         String powYString = "";
         String coeString = "";
-
         if (getCoe().equals(BigInteger.ZERO)) {
             return "";
-        } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.valueOf(1))) {
+        } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.ONE)) {
             coeString = "";
-            // -1*x*y*sin(x) = -x*y*sin(x)
             if (getCoe().equals(BigInteger.valueOf(-1))) {
                 coeString = "-";
             }
-            // -1*_*_=-1
             if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
                 coeString = String.valueOf(getCoe());
             }
         } else {
             coeString = getCoe() + "*";
-            // 2*_*_*_
             if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
                 coeString = getCoe() + "";
             }
         }
-
         if (getXPow() == 0) {
-            // 后面为空
             if (getYPow() == 0 && getTriFactors().isEmpty()) {
                 powXString = "";
-                // 前面为空
                 if (coeString.isEmpty()) {
                     powXString = "1";
                 }
@@ -143,9 +136,7 @@ public class AtomicElement {
                 powXString = "x^" + getXPow() + "*";
             }
         }
-
         if (getYPow() == 0) {
-            // 后面为空
             if (getTriFactors().isEmpty()) {
                 powYString = "";
                 if (coeString.isEmpty() && powXString.isEmpty()) {
@@ -162,7 +153,10 @@ public class AtomicElement {
         } else {
             powYString = "y^" + getYPow();
         }
+        return coeString + powXString + powYString + getTriString();
+    }
 
+    private String getTriString() {
         StringBuilder triString = new StringBuilder();
         if (!triFactors.isEmpty()) {
             HashMap<String, Integer> map = new HashMap<>();
@@ -170,7 +164,8 @@ public class AtomicElement {
                 if (!map.containsKey(triFactors.get(i).toString())) {
                     map.put(triFactors.get(i).toString(), 1);
                 } else {
-                    map.put(triFactors.get(i).toString(), map.get(triFactors.get(i).toString()) + 1);
+                    map.put(triFactors.get(i).toString(),
+                        map.get(triFactors.get(i).toString()) + 1);
                 }
             }
             for (String sinCosFactor : map.keySet()) {
@@ -189,7 +184,7 @@ public class AtomicElement {
         if (!triString.toString().isEmpty()) {
             triString.deleteCharAt(triString.length() - 1);
         }
-        return coeString + powXString + powYString + triString;
+        return triString.toString();
     }
 
 }
