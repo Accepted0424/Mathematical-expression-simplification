@@ -103,6 +103,10 @@ public class SinCosFactor extends Factor {
                     triFactors.add(this);
                 }
                 atoms.add(new AtomicElement(BigInteger.ONE, 0,0, triFactors));
+                if (exponent == 0) {
+                    atoms.clear();
+                    atoms.add(new AtomicElement(BigInteger.ONE, 0, 0, null));
+                }
                 return atoms;
             } else {
                 System.err.println("Invalid SinCosFactor: " + getFactor());
