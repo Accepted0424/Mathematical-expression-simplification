@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertible {
     // 一个表达式只包含0或1个递归函数，使用static变量存储递归函数的规则
     private static final Pattern ruleRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)=(.*)");
-    private static final Pattern factorRe = Pattern.compile("f\\{(\\d+|n)}\\((.*)\\)");
+    private static final Pattern factorRe = Pattern.compile("[+-]?f\\{(\\d+|n)}\\((.*)\\)");
     private static final Map<String, String> funcRule = new HashMap<>();
     private static ArrayList<String> formalParamList = new ArrayList<>();
 
