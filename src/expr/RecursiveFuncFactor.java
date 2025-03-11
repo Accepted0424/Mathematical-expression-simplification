@@ -72,10 +72,16 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             if (funcRule.containsKey(args)) {
                 String s = funcRule.get(args);
                 int idx = 0;
+                if (formalParamList.size() > 1) {
+                    String secondParam = formalParamList.get(1);
+                    s = s.replaceAll(secondParam, "z");
+                    formalParamList.set(1, "z");
+                }
                 for (String param: formalParamList) { // 代入实参
                     s = s.replaceAll(param, "(" + actualParamList.get(idx) + ")");
                     idx++;
                 }
+                s = s.replaceAll("z", "x");
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
                 return atoms;
@@ -86,10 +92,16 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 String s = funcRule.get("n").replaceAll("f\\{n-1}", recSub1); // 替换参数
                 s = s.replaceAll("f\\{n-2}", recSub2);
                 int idx = 0;
+                if (formalParamList.size() > 1) {
+                    String secondParam = formalParamList.get(1);
+                    s = s.replaceAll(secondParam, "z");
+                    formalParamList.set(1, "z");
+                }
                 for (String param : formalParamList) {
                     s = s.replaceAll(param, "(" + actualParamList.get(idx) + ")"); // 代入实参
                     idx++;
                 }
+                s = s.replaceAll("z", "x");
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
                 return atoms;
