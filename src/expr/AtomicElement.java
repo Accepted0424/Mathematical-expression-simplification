@@ -104,6 +104,9 @@ public class AtomicElement {
         String powXString = "";
         String powYString = "";
         String coeString = getCoeString();
+        if (getCoe().equals(BigInteger.ZERO)) {
+            return "";
+        }
 
         if (getXPow() == 0) {
             if (getYPow() == 0 && getTriFactors().isEmpty()) {
