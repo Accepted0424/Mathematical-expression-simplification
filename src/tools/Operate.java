@@ -13,12 +13,14 @@ public class Operate {
     public static ArrayList<AtomicElement>
         mul(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
         //先合并同类相
-        ArrayList<AtomicElement> mergedLeft = merge(left);
-        ArrayList<AtomicElement> mergedRight = merge(right);
+        //ArrayList<AtomicElement> mergedLeft = merge(left);
+        //ArrayList<AtomicElement> mergedRight = merge(right);
 
         ArrayList<AtomicElement> atoms = new ArrayList<>();
-        for (AtomicElement l: mergedLeft) {
-            for (AtomicElement r: mergedRight) {
+        //for (AtomicElement l: mergedLeft) {
+        //    for (AtomicElement r: mergedRight) {
+        for (AtomicElement l: left) {
+            for (AtomicElement r: right) {
                 atoms.add(simpleMul(l,r));
             }
         }

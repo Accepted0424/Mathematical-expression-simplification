@@ -44,13 +44,14 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible {
                 if (m.matches()) {
                     Expr expr = new Expr(innerExpr);
                     ArrayList<AtomicElement> atoms = new ArrayList<>(expr.getAtomicElements());
+                    ArrayList<AtomicElement> newAtoms = new ArrayList<>(atoms);
 
                     if (m.group(1) != null) {
                         // 含有指数
                         int exponent = Integer.parseInt(m.group(1));
                         if (exponent != 0) {
                             for (int j = 0; j < exponent - 1; j++) {
-                                atoms = Operate.mul(atoms, new Expr(innerExpr).getAtomicElements());
+                                atoms = Operate.mul(atoms, newAtoms);
                             }
                         } else {
                             // 指数为0直接返回1
