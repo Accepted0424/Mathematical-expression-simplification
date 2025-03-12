@@ -103,23 +103,8 @@ public class AtomicElement {
         }
         String powXString = "";
         String powYString = "";
-        String coeString = "";
-        if (getCoe().equals(BigInteger.ZERO)) {
-            return "";
-        } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.ONE)) {
-            coeString = "";
-            if (getCoe().equals(BigInteger.valueOf(-1))) {
-                coeString = "-";
-            }
-            if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
-                coeString = String.valueOf(getCoe());
-            }
-        } else {
-            coeString = getCoe() + "*";
-            if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
-                coeString = getCoe() + "";
-            }
-        }
+        String coeString = getCoeString();
+
         if (getXPow() == 0) {
             if (getYPow() == 0 && getTriFactors().isEmpty()) {
                 powXString = "";
@@ -160,6 +145,27 @@ public class AtomicElement {
         }
         cachedString = coeString + powXString + powYString + getTriString();
         return coeString + powXString + powYString + getTriString();
+    }
+
+    private String getCoeString() {
+        String coeString = "";
+        if (getCoe().equals(BigInteger.ZERO)) {
+            return "";
+        } else if (getCoe().equals(BigInteger.valueOf(-1)) || getCoe().equals(BigInteger.ONE)) {
+            coeString = "";
+            if (getCoe().equals(BigInteger.valueOf(-1))) {
+                coeString = "-";
+            }
+            if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
+                coeString = String.valueOf(getCoe());
+            }
+        } else {
+            coeString = getCoe() + "*";
+            if (getXPow() == 0 && getYPow() == 0 && getTriFactors().isEmpty()) {
+                coeString = getCoe() + "";
+            }
+        }
+        return coeString;
     }
 
     private String getTriString() {
