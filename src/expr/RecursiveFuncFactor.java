@@ -71,17 +71,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             }
             if (funcRule.containsKey(args)) {
                 String s = funcRule.get(args);
-                int idx = 0;
-                if (formalParamList.size() > 1) {
-                    String secondParam = formalParamList.get(1);
-                    s = s.replaceAll(secondParam, "z");
-                    formalParamList.set(1, "z");
-                }
-                for (String param: formalParamList) { // 代入实参
-                    s = s.replaceAll(param, "(" + actualParamList.get(idx) + ")");
-                    idx++;
-                }
-                s = s.replaceAll("z", "x");
+                s = replaceParam(s, actualParamList);
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
                 return atoms;
@@ -91,17 +81,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 String recSub2 = String.format("f{%d}", argsInt - 2);
                 String s = funcRule.get("n").replaceAll("f\\{n-1}", recSub1); // 替换参数
                 s = s.replaceAll("f\\{n-2}", recSub2);
-                int idx = 0;
-                if (formalParamList.size() > 1) {
-                    String secondParam = formalParamList.get(1);
-                    s = s.replaceAll(secondParam, "z");
-                    formalParamList.set(1, "z");
-                }
-                for (String param : formalParamList) {
-                    s = s.replaceAll(param, "(" + actualParamList.get(idx) + ")"); // 代入实参
-                    idx++;
-                }
-                s = s.replaceAll("z", "x");
+                s = replaceParam(s, actualParamList);
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
                 return atoms;
@@ -110,5 +90,23 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             System.err.println("Invalid recursive function: " + getFactor());
         }
         return null;
+    }
+
+    private String replaceParam(String s, ArrayList<String> actualParamList) {
+        int idx = 0;
+        String secondParam = "";
+        String result = s;
+        if (formalParamList.size() > 1) {
+            secondParam = formalParamList.get(1);
+            result = result.replaceAll(secondParam, "z");
+            formalParamList.set(1, "z");
+        }
+        for (String param: formalParamList) { // 代入实参
+            result = result.replaceAll(param, "(" + actualParamList.get(idx) + ")");
+            idx++;
+        }
+        result = result.replaceAll("z", secondParam);
+        formalParamList.set(1, secondParam);
+        return result;
     }
 }
