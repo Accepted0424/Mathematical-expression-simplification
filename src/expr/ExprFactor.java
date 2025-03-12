@@ -59,7 +59,7 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible {
                             atoms.add(new AtomicElement(BigInteger.ONE, 0,0,null));
                         }
                     }
-                    return Operate.merge(atoms);
+                    return atoms;
                 }
             }
         }

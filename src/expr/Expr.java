@@ -62,31 +62,32 @@ public class Expr implements AtomicArrayConvertible {
         for (int i = 1; i < terms.size(); i++) {
             atoms = Operate.add(atoms, terms.get(i).getAtomicElements());
         }
-        return Operate.merge(atoms);
+        return atoms;
     }
 
     @Override
     public String toString() {
         ArrayList<AtomicElement> atoms = getAtomicElements();
-        ArrayList<AtomicElement> mergedAtoms = Operate.merge(atoms);
         StringBuilder sb = new StringBuilder();
 
-        for (int i = 0; i < mergedAtoms.size() - 1; i++) {
-            if (!mergedAtoms.get(i).toString().isEmpty()) {
-                sb.append(mergedAtoms.get(i));
-                if (i != mergedAtoms.size() - 1) {
+        for (int i = 0; i < atoms.size() - 1; i++) {
+            String atomString = atoms.get(i).toString();
+            if (!atomString.isEmpty()) {
+                sb.append(atomString);
+                if (i != atoms.size() - 1) {
                     sb.append("+");
                 }
             }
         }
 
-        //最后一个mono为空不需要添加括号
-        if (mergedAtoms.get(mergedAtoms.size() - 1).toString().isEmpty()) {
+        //最后一个mono为空不需要添加加号
+        String lastAtomString = atoms.get(atoms.size() - 1).toString();
+        if (lastAtomString.isEmpty()) {
             if (sb.length() > 0) {
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
-        sb.append(mergedAtoms.get(mergedAtoms.size() - 1).toString());
+        sb.append(atoms.get(atoms.size() - 1).toString());
 
         if (sb.toString().isEmpty()) {
             return "0";
