@@ -32,7 +32,7 @@ public class Operate {
         ArrayList<AtomicElement> addedAtoms = new ArrayList<>();
         addedAtoms.addAll(left);
         addedAtoms.addAll(right);
-        return addedAtoms;
+        return merge(addedAtoms);
     }
 
     private static AtomicElement simpleMul(AtomicElement left, AtomicElement right) {

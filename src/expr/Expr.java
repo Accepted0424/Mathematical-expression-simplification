@@ -62,7 +62,7 @@ public class Expr implements AtomicArrayConvertible {
         for (int i = 1; i < terms.size(); i++) {
             atoms = Operate.add(atoms, terms.get(i).getAtomicElements());
         }
-        return atoms;
+        return Operate.merge(atoms);
     }
 
     @Override
@@ -87,7 +87,7 @@ public class Expr implements AtomicArrayConvertible {
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
-        sb.append(atoms.get(atoms.size() - 1).toString());
+        sb.append(lastAtomString);
 
         if (sb.toString().isEmpty()) {
             return "0";

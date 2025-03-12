@@ -44,9 +44,11 @@ public class SinCosFactor extends Factor {
     }
 
     private boolean hasSameAtomElement(SinCosFactor that) {
-        for (AtomicElement thisAtom : this.getAtomicElements()) {
+        ArrayList<AtomicElement> thisAes = this.getAtomicElements();
+        ArrayList<AtomicElement> thatAes = that.getAtomicElements();
+        for (AtomicElement thisAtom : thisAes) {
             boolean has = false;
-            for (AtomicElement thatAtom : that.getAtomicElements()) {
+            for (AtomicElement thatAtom : thatAes) {
                 if (thisAtom.equals(thatAtom)) {
                     has = true;
                     break;

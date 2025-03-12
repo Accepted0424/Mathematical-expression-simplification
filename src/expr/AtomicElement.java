@@ -10,6 +10,7 @@ public class AtomicElement {
     private BigInteger coe;
     private final int xsPow;
     private final int ysPow;
+    private String cachedString = null;
     // 已化简的三角函数因子
     private final ArrayList<SinCosFactor> triFactors = new ArrayList<>();
 
@@ -21,6 +22,7 @@ public class AtomicElement {
             this.triFactors.addAll(triFactors);
             this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
         }
+        this.cachedString = null;
     }
 
     public void inverseCoe() {
@@ -96,6 +98,9 @@ public class AtomicElement {
 
     @Override
     public String toString() {
+        if (this.cachedString != null) {
+            return cachedString;
+        }
         String powXString = "";
         String powYString = "";
         String coeString = "";
@@ -153,6 +158,7 @@ public class AtomicElement {
         } else {
             powYString = "y^" + getYPow();
         }
+        cachedString = coeString + powXString + powYString + getTriString();
         return coeString + powXString + powYString + getTriString();
     }
 
