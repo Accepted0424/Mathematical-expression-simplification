@@ -106,7 +106,9 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             idx++;
         }
         result = result.replaceAll("z", secondParam);
-        formalParamList.set(1, secondParam);
+        if (formalParamList.size() > 1) {
+            formalParamList.set(1, secondParam);
+        }
         return result;
     }
 }
