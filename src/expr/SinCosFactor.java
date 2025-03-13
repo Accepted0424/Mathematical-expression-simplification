@@ -102,9 +102,9 @@ public class SinCosFactor extends Factor {
                 }
                 ArrayList<SinCosFactor> triFactors = new ArrayList<>();
                 triFactors.add(this);
-                //for (int i = 0; i < exponent - 1; i++) {
-                //    triFactors.add(this);
-                //}
+                for (int i = 0; i < exponent - 1; i++) {
+                    triFactors.add(this);
+                }
                 atoms.add(new AtomicElement(BigInteger.ONE, 0,0, triFactors));
                 if (exponent == 0) {
                     atoms.clear();
@@ -143,14 +143,13 @@ public class SinCosFactor extends Factor {
                 } else {
                     sb.append(atom);
                 }
-                if (innerMonos.indexOf(atom) != innerMonos.size() - 1) {
-                    sb.append("+");
-                }
+                sb.append("+");
             }
+            sb.deleteCharAt(sb.length() - 1);
             sb.append(")");
-            sb.append(")").append("^").append(pow);
+            sb.append(")");
             cachedString = sb.toString();
-            return cachedString;
+            return sb.toString();
         }
     }
 }

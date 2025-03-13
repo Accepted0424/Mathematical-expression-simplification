@@ -20,7 +20,7 @@ public class AtomicElement {
         this.ysPow = ysPow;
         if (triFactors != null) {
             this.triFactors.addAll(triFactors);
-            //this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
+            this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
         }
         this.cachedString = null;
     }
@@ -179,10 +179,10 @@ public class AtomicElement {
             HashMap<String, Integer> map = new HashMap<>();
             for (int i = 0; i < triFactors.size(); i++) {
                 if (!map.containsKey(triFactors.get(i).toString())) {
-                    map.put(triFactors.get(i).toString(), triFactors.get(i).getPow());
+                    map.put(triFactors.get(i).toString(), 1);
                 } else {
                     map.put(triFactors.get(i).toString(),
-                        map.get(triFactors.get(i).toString()) + triFactors.get(i).getPow());
+                        map.get(triFactors.get(i).toString()) + 1);
                 }
             }
             for (String sinCosFactor : map.keySet()) {

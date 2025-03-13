@@ -22,7 +22,7 @@ public class Operate {
                 atoms.add(simpleMul(l,r));
             }
         }
-        return atoms;
+        return Operate.merge(atoms);
     }
 
     public static ArrayList<AtomicElement>
@@ -142,7 +142,6 @@ public class Operate {
         if (left.getClass() != right.getClass()) {
             return false;
         }
-
         return true;
     }
 }
