@@ -55,7 +55,7 @@ public class AtomicElement {
             sb.append(sinCosFactor);
             sb.append("*");
         }
-        sb.deleteCharAt(sb.length()-1);
+        sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 
