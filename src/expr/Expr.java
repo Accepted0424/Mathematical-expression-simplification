@@ -5,7 +5,7 @@ import tools.Operate;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class Expr implements AtomicArrayConvertible {
+public class Expr implements AtomicArrayConvertible, Derivable {
     private String expr;
     private ArrayList<Term> terms = new ArrayList<>();
     private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
@@ -68,6 +68,15 @@ public class Expr implements AtomicArrayConvertible {
         }
         cachedAtoms = Operate.merge(atoms);
         return cachedAtoms;
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        ArrayList<AtomicElement> derivatives = new ArrayList<>(terms.get(0).derive());
+        for (int i = 1; i < terms.size(); i++) {
+            derivatives = Operate.add(derivatives, terms.get(i).getAtomicElements());
+        }
+        return Operate.merge(derivatives);
     }
 
     @Override

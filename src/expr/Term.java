@@ -3,7 +3,7 @@ package expr;
 import tools.Operate;
 import java.util.ArrayList;
 
-public class Term implements AtomicArrayConvertible {
+public class Term implements AtomicArrayConvertible, Derivable {
     // example: (x+1)*(2*x+6) (x+1)^2*2 (x+1)^3
 
     private ArrayList<Factor> factors = new ArrayList<>();
@@ -76,5 +76,20 @@ public class Term implements AtomicArrayConvertible {
         }
         cachedAtoms = Operate.merge(atoms);
         return cachedAtoms;
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        ArrayList<AtomicElement> derivatives = new ArrayList<>();
+        for (int i = 0; i < factors.size(); i++) {
+            ArrayList<AtomicElement> derivative = factors.get(i).derive();
+            for (int j = 0; j < factors.size(); j++) {
+                if (i != j) {
+                    derivative.addAll(Operate.mul(derivative, factors.get(j).getAtomicElements()));
+                }
+            }
+            derivatives.addAll(derivative);
+        }
+        return derivatives;
     }
 }

@@ -5,11 +5,11 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PowerFactor extends Factor implements AtomicArrayConvertible {
+public class PowerFactor extends Factor implements Derivable {
     //带x的均为变量因子
     //example: x x^2
     private static final String patternTerm = "([+-]{0,2})([xy])\\^?\\+?(\\d+)?";
-    public static final Pattern re = Pattern.compile(patternTerm);
+    private static final Pattern re = Pattern.compile(patternTerm);
 
     public PowerFactor(String factor) {
         super(factor);
@@ -39,5 +39,15 @@ public class PowerFactor extends Factor implements AtomicArrayConvertible {
             System.err.println("Invalid PowerFactor: " + getFactor());
             return null;
         }
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        ArrayList<AtomicElement> derivatives = new ArrayList<>();
+        AtomicElement atom = getAtomicElements().get(0);
+        BigInteger pow = BigInteger.valueOf(atom.getXPow());
+        BigInteger coe = atom.getCoe().multiply(pow);
+        AtomicElement derivative = new AtomicElement(coe, atom.getXPow() - 1, 0, null);
+        return null;
     }
 }

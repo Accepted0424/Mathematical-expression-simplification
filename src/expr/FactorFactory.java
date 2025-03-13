@@ -9,7 +9,8 @@ public class FactorFactory {
         Pattern exprNoBracketRe = Pattern.compile("[+-]?\\^?\\+?(\\d+)?");
         Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?[+-]?(\\d+)?");
         Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?[+-]?(\\d+)?");
-        Pattern recursiveFunRe = Pattern.compile("[+-]?f\\{\\d+}\\(.*\\)");
+        Pattern recursiveFuncRe = Pattern.compile("[+-]?f\\{\\d+}\\(.*\\)");
+        Pattern normalFuncRe = Pattern.compile("[+-]?([gh])\\((.*)\\)");
 
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);
@@ -17,9 +18,11 @@ public class FactorFactory {
             return new PowerFactor(s);
         } else if (sinRe.matcher(s).matches() || cosRe.matcher(s).matches()) {
             return new SinCosFactor(s);
-        } else if (recursiveFunRe.matcher(s).matches()) {
+        } else if (recursiveFuncRe.matcher(s).matches()) {
             return new RecursiveFuncFactor(s);
-        } else {
+        } else if (normalFuncRe.matcher(s).matches()) {
+            return new NormalFuncFactor(s);
+        }else {
             // 匹配 ExprFactor
             // 加入嵌套括号之后匹配表达式因子需要特殊处理，不能直接使用正则表达式
             int start = 0;

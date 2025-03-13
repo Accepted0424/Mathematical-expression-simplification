@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExprFactor extends Factor implements AtomicArrayConvertible {
+public class ExprFactor extends Factor implements Derivable {
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
 
@@ -65,6 +65,12 @@ public class ExprFactor extends Factor implements AtomicArrayConvertible {
         }
         System.err.println("Error in ExprFactor: Invalid factor format in " + s);
         return null;
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        Expr expr = new Expr(getFactor());
+        return expr.derive();
     }
 
     @Override

@@ -1,9 +1,10 @@
 package expr;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class Factor implements AtomicArrayConvertible {
+public abstract class Factor implements AtomicArrayConvertible, Derivable {
     private final String factor;
     private int triType = 0;
     private Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?[+-]?(\\d+)?");
@@ -28,5 +29,9 @@ public abstract class Factor implements AtomicArrayConvertible {
      */
     public int getTriType() {
         return triType;
+    }
+
+    public void setTriType(int triType) {
+        this.triType = triType;
     }
 }

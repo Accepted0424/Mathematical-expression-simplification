@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SinCosFactor extends Factor {
+public class SinCosFactor extends Factor implements Derivable{
     // example: sin(x) cos(x) sin(x^2)^2 cos(x+1)^2 sin((x+1)*2)^2
     private static final Pattern sinRe = Pattern.compile("[+-]?sin\\^?[+-]?(\\d+)?");
     private static final Pattern cosRe = Pattern.compile("[+-]?cos\\^?[+-]?(\\d+)?");
@@ -151,5 +151,17 @@ public class SinCosFactor extends Factor {
             cachedString = sb.toString();
             return sb.toString();
         }
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        ArrayList<AtomicElement> derivatives = new ArrayList<>();
+        AtomicElement atom = getAtomicElements().get(0);
+        SinCosFactor sinCosFactor = atom.getTriFactors().get(0);
+        String newFactor = sinCosFactor.getFactor().replaceFirst("(sin).*", "cos");
+        newFactor = newFactor.replaceFirst("(cos).*", "sin");
+        SinCosFactor newSinCosFactor = new SinCosFactor(newFactor);
+        AtomicElement derivative = new AtomicElement(atom.getCoe(), atom.getXPow(), atom.getYPow(), );
+        return null;
     }
 }

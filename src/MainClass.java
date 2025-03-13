@@ -1,4 +1,5 @@
 import expr.Expr;
+import expr.NormalFuncFactor;
 import expr.RecursiveFuncFactor;
 import tools.Operate;
 
@@ -9,7 +10,12 @@ public class MainClass {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String n = sc.nextLine();
-        for (int i = 0; i < Integer.parseInt(n) * 3; i++) {
+        for (int i = 0; i < Integer.parseInt(n); i++) {
+            String func = sc.nextLine();
+            NormalFuncFactor.addFunc(func);
+        }
+        String m = sc.nextLine();
+        for (int i = 0; i < Integer.parseInt(m) * 3; i++) {
             String rule = sc.nextLine().replaceAll("[ \\t]", "");
             rule = Operate.mergeSymbol(rule);
             RecursiveFuncFactor.addRule(rule);
