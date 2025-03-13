@@ -12,17 +12,19 @@ import java.util.Map;
 public class Operate {
     public static ArrayList<AtomicElement>
         mul(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
-        // 先合并同类相
-        ArrayList<AtomicElement> mergedLeft = merge(left);
-        ArrayList<AtomicElement> mergedRight = merge(right);
+        //先合并同类相
+        //ArrayList<AtomicElement> mergedLeft = merge(left);
+        //ArrayList<AtomicElement> mergedRight = merge(right);
 
         ArrayList<AtomicElement> atoms = new ArrayList<>();
-        for (AtomicElement l: mergedLeft) {
-            for (AtomicElement r: mergedRight) {
+        //for (AtomicElement l: mergedLeft) {
+        //    for (AtomicElement r: mergedRight) {
+        for (AtomicElement l: left) {
+            for (AtomicElement r: right) {
                 atoms.add(simpleMul(l,r));
             }
         }
-        return Operate.merge(atoms);
+        return atoms;
     }
 
     public static ArrayList<AtomicElement>
@@ -75,25 +77,19 @@ public class Operate {
 
     //合并同类项
     public static ArrayList<AtomicElement> merge(ArrayList<AtomicElement> atoms) {
-        if (atoms.size() > 2) {
-            return atoms;
-        }
-        HashMap<Integer, AtomicElement> map = new HashMap<>();
+        HashMap<String, AtomicElement> map = new HashMap<>();
         for (AtomicElement atom: atoms) {
-            int key = (atom.getXPow() + "_" + atom.getTriFactorsStr()).hashCode();
-            map.compute(key, (k, existingAtom) -> {
-                if (existingAtom == null) {
-                    return atom; // 如果不存在该键，则直接插入当前元素
+            String key = atom.getXPow() + "_" + atom.getTriFactorsStr();
+            if (map.containsKey(key)) {
+                AtomicElement merged = simpleAdd(map.get(key), atom);
+                if (merged != null) {
+                    map.put(key, merged);
                 } else {
-                    // 合并已有的AtomicElement和当前元素
-                    return new AtomicElement(
-                            existingAtom.getCoe().add(atom.getCoe()), // 合并coe
-                            existingAtom.getXPow(),  // 保持原有的XPow
-                            existingAtom.getYPow(),  // 保持原有的YPow
-                            existingAtom.getTriFactors() // 保持原有的TriFactors
-                    );
+                    map.put(key, atom);
                 }
-            });
+            } else {
+                map.put(key, atom);
+            }
         }
         return new ArrayList<>(map.values());
     }
@@ -146,6 +142,7 @@ public class Operate {
         if (left.getClass() != right.getClass()) {
             return false;
         }
+
         return true;
     }
 }

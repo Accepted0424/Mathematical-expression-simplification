@@ -9,7 +9,6 @@ public class Term implements AtomicArrayConvertible {
     private ArrayList<Factor> factors = new ArrayList<>();
     private final String term;
     private boolean isNegative;
-    private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
 
     public Term(String term) {
         //化简重复+-再赋值
@@ -60,9 +59,6 @@ public class Term implements AtomicArrayConvertible {
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
-        if (!cachedAtoms.isEmpty()) {
-            return cachedAtoms;
-        }
         //factor的单项式相乘
         ArrayList<AtomicElement> atoms = factors.get(0).getAtomicElements();
         for (int i = 1; i < factors.size(); i++) {
@@ -74,7 +70,6 @@ public class Term implements AtomicArrayConvertible {
                 atom.inverseCoe();
             }
         }
-        cachedAtoms = Operate.merge(atoms);
-        return cachedAtoms;
+        return atoms;
     }
 }

@@ -8,7 +8,6 @@ import java.util.regex.Pattern;
 public class Expr implements AtomicArrayConvertible {
     private String expr;
     private ArrayList<Term> terms = new ArrayList<>();
-    private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
 
     public Expr(String expr) {
         this.expr = expr;
@@ -59,15 +58,11 @@ public class Expr implements AtomicArrayConvertible {
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
-        if (!cachedAtoms.isEmpty()) {
-            return cachedAtoms;
-        }
         ArrayList<AtomicElement> atoms = new ArrayList<>(terms.get(0).getAtomicElements());
         for (int i = 1; i < terms.size(); i++) {
             atoms = Operate.add(atoms, terms.get(i).getAtomicElements());
         }
-        cachedAtoms = Operate.merge(atoms);
-        return cachedAtoms;
+        return Operate.merge(atoms);
     }
 
     @Override
@@ -86,14 +81,13 @@ public class Expr implements AtomicArrayConvertible {
         }
 
         //最后一个mono为空不需要添加加号
-        if (!atoms.isEmpty() && atoms.get(atoms.size() - 1).toString().isEmpty()) {
+        String lastAtomString = atoms.get(atoms.size() - 1).toString();
+        if (lastAtomString.isEmpty()) {
             if (sb.length() > 0) {
                 sb.deleteCharAt(sb.length() - 1);
             }
         }
-        if (!atoms.isEmpty()) {
-            sb.append(atoms.get(atoms.size() - 1).toString());
-        }
+        sb.append(lastAtomString);
 
         if (sb.toString().isEmpty()) {
             return "0";

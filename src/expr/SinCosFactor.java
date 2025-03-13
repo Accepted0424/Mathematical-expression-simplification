@@ -15,8 +15,6 @@ public class SinCosFactor extends Factor {
     private static final Pattern cosRe = Pattern.compile("[+-]?cos\\^?[+-]?(\\d+)?");
     private ArrayList<AtomicElement> innerMonos = new ArrayList<>();
     private int pow = 1;
-    private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
-    private String cachedString = null;
 
     public SinCosFactor(String factor) {
         super(factor);
@@ -86,9 +84,6 @@ public class SinCosFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
-        if (!cachedAtoms.isEmpty()) {
-            return cachedAtoms;
-        }
         ArrayList<AtomicElement> atoms = new ArrayList<>();
         Map.Entry<String, String> extracted = Operate.getStrInOutermostBracket(getFactor());
         if (extracted != null) {
@@ -114,7 +109,6 @@ public class SinCosFactor extends Factor {
                     atoms.clear();
                     atoms.add(new AtomicElement(BigInteger.ONE, 0, 0, null));
                 }
-                cachedAtoms = atoms;
                 return atoms;
             } else {
                 System.err.println("Invalid SinCosFactor: " + getFactor());
@@ -128,9 +122,6 @@ public class SinCosFactor extends Factor {
 
     @Override
     public String toString() {
-        if (this.cachedString != null) {
-            return cachedString;
-        }
         if (innerMonos.isEmpty()) {
             return "";
         } else {
@@ -148,12 +139,12 @@ public class SinCosFactor extends Factor {
                 } else {
                     sb.append(atom);
                 }
-                sb.append("+");
+                if (innerMonos.indexOf(atom) != innerMonos.size() - 1) {
+                    sb.append("+");
+                }
             }
-            sb.deleteCharAt(sb.length() - 1);
             sb.append(")");
             sb.append(")");
-            cachedString = sb.toString();
             return sb.toString();
         }
     }
