@@ -20,7 +20,7 @@ public class AtomicElement {
         this.ysPow = ysPow;
         if (triFactors != null) {
             this.triFactors.addAll(triFactors);
-            this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
+            //this.triFactors.sort(Comparator.comparing(SinCosFactor::getTriType));
         }
         this.cachedString = null;
     }
@@ -47,13 +47,15 @@ public class AtomicElement {
 
     // 便于作为map的key
     public String getTriFactorsStr() {
+        if (triFactors.isEmpty()) {
+            return "";
+        }
         StringBuilder sb = new StringBuilder();
         for (SinCosFactor sinCosFactor : triFactors) {
             sb.append(sinCosFactor);
-            if (triFactors.indexOf(sinCosFactor) != triFactors.size() - 1) {
-                sb.append("*");
-            }
+            sb.append("*");
         }
+        sb.deleteCharAt(sb.length()-1);
         return sb.toString();
     }
 
@@ -177,10 +179,10 @@ public class AtomicElement {
             HashMap<String, Integer> map = new HashMap<>();
             for (int i = 0; i < triFactors.size(); i++) {
                 if (!map.containsKey(triFactors.get(i).toString())) {
-                    map.put(triFactors.get(i).toString(), 1);
+                    map.put(triFactors.get(i).toString(), triFactors.get(i).getPow());
                 } else {
                     map.put(triFactors.get(i).toString(),
-                        map.get(triFactors.get(i).toString()) + 1);
+                        map.get(triFactors.get(i).toString()) + triFactors.get(i).getPow());
                 }
             }
             for (String sinCosFactor : map.keySet()) {

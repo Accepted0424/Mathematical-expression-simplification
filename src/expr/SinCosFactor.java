@@ -15,6 +15,7 @@ public class SinCosFactor extends Factor {
     private static final Pattern cosRe = Pattern.compile("[+-]?cos\\^?[+-]?(\\d+)?");
     private ArrayList<AtomicElement> innerMonos = new ArrayList<>();
     private int pow = 1;
+    private String cachedString = null;
 
     public SinCosFactor(String factor) {
         super(factor);
@@ -101,9 +102,9 @@ public class SinCosFactor extends Factor {
                 }
                 ArrayList<SinCosFactor> triFactors = new ArrayList<>();
                 triFactors.add(this);
-                for (int i = 0; i < exponent - 1; i++) {
-                    triFactors.add(this);
-                }
+                //for (int i = 0; i < exponent - 1; i++) {
+                //    triFactors.add(this);
+                //}
                 atoms.add(new AtomicElement(BigInteger.ONE, 0,0, triFactors));
                 if (exponent == 0) {
                     atoms.clear();
@@ -122,6 +123,9 @@ public class SinCosFactor extends Factor {
 
     @Override
     public String toString() {
+        if (cachedString != null) {
+            return  cachedString;
+        }
         if (innerMonos.isEmpty()) {
             return "";
         } else {
@@ -144,8 +148,9 @@ public class SinCosFactor extends Factor {
                 }
             }
             sb.append(")");
-            sb.append(")");
-            return sb.toString();
+            sb.append(")").append("^").append(pow);
+            cachedString = sb.toString();
+            return cachedString;
         }
     }
 }

@@ -13,14 +13,12 @@ public class Operate {
     public static ArrayList<AtomicElement>
         mul(ArrayList<AtomicElement> left, ArrayList<AtomicElement> right) {
         //先合并同类相
-        //ArrayList<AtomicElement> mergedLeft = merge(left);
-        //ArrayList<AtomicElement> mergedRight = merge(right);
+        ArrayList<AtomicElement> mergedLeft = merge(left);
+        ArrayList<AtomicElement> mergedRight = merge(right);
 
         ArrayList<AtomicElement> atoms = new ArrayList<>();
-        //for (AtomicElement l: mergedLeft) {
-        //    for (AtomicElement r: mergedRight) {
-        for (AtomicElement l: left) {
-            for (AtomicElement r: right) {
+        for (AtomicElement l: mergedLeft) {
+            for (AtomicElement r: mergedRight) {
                 atoms.add(simpleMul(l,r));
             }
         }
@@ -43,17 +41,19 @@ public class Operate {
         int leftYPow = left.getYPow();
         int rightYPow = right.getYPow();
         ArrayList<SinCosFactor> triFactors = new ArrayList<>();
-        triFactors.addAll(left.getTriFactors());
-        triFactors.addAll(right.getTriFactors());
-        if (!left.getTriFactors().isEmpty() && !right.getTriFactors().isEmpty()) {
+        ArrayList<SinCosFactor> leftFactors = left.getTriFactors();
+        ArrayList<SinCosFactor> rightFactors = right.getTriFactors();
+        triFactors.addAll(leftFactors);
+        triFactors.addAll(rightFactors);
+        if (!leftFactors.isEmpty() && !rightFactors.isEmpty()) {
             return new AtomicElement(leftCoe.multiply(rightCoe),
                     leftXPow + rightXPow,leftYPow + rightYPow, triFactors);
-        } else if (!left.getTriFactors().isEmpty()) {
+        } else if (!leftFactors.isEmpty()) {
             return new AtomicElement(leftCoe.multiply(rightCoe),
-                    leftXPow + rightXPow,leftYPow + rightYPow, left.getTriFactors());
-        } else if (!right.getTriFactors().isEmpty()) {
+                    leftXPow + rightXPow,leftYPow + rightYPow, leftFactors);
+        } else if (!rightFactors.isEmpty()) {
             return new AtomicElement(leftCoe.multiply(rightCoe),
-                    leftXPow + rightXPow,leftYPow + rightYPow, right.getTriFactors());
+                    leftXPow + rightXPow,leftYPow + rightYPow, rightFactors);
         } else {
             return new AtomicElement(leftCoe.multiply(rightCoe),
                     leftXPow + rightXPow,leftYPow + rightYPow, null);
