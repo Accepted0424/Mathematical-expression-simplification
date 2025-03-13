@@ -16,6 +16,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
     private static final Pattern factorRe = Pattern.compile("[+-]?f\\{(\\d+|n)}\\((.*)\\)");
     private static final Map<String, String> funcRule = new HashMap<>();
     private static ArrayList<String> formalParamList = new ArrayList<>();
+    private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
 
     public RecursiveFuncFactor(String func) {
         super(func);
@@ -40,6 +41,9 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
+        if (!cachedAtoms.isEmpty()) {
+            return cachedAtoms;
+        }
         ArrayList<AtomicElement> atoms = new ArrayList<>();
         Matcher m = factorRe.matcher(getFactor());
         if (m.matches()) {
@@ -74,6 +78,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 s = replaceParam(s, actualParamsList);
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
+                cachedAtoms = atoms;
                 return atoms;
             } else {
                 // 解析递推规则
@@ -84,6 +89,7 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
                 s = replaceParam(s, actualParamsList);
                 Expr expr = new Expr(s);
                 atoms.addAll(expr.getAtomicElements());
+                cachedAtoms = atoms;
                 return atoms;
             }
         } else {

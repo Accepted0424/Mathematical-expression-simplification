@@ -47,13 +47,15 @@ public class AtomicElement {
 
     // 便于作为map的key
     public String getTriFactorsStr() {
+        if (triFactors.isEmpty()) {
+            return null;
+        }
         StringBuilder sb = new StringBuilder();
         for (SinCosFactor sinCosFactor : triFactors) {
             sb.append(sinCosFactor);
-            if (triFactors.indexOf(sinCosFactor) != triFactors.size() - 1) {
-                sb.append("*");
-            }
+            sb.append("*");
         }
+        sb.deleteCharAt(sb.length() - 1);
         return sb.toString();
     }
 
