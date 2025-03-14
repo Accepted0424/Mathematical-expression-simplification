@@ -11,8 +11,9 @@ public class MainClass {
         Scanner sc = new Scanner(System.in);
         String n = sc.nextLine();
         for (int i = 0; i < Integer.parseInt(n); i++) {
-            String func = sc.nextLine();
-            NormalFuncFactor.addFunc(func.replaceAll("[ \\t]", ""));
+            String func = sc.nextLine().replaceAll("[ \\t]", "");
+            func = Operate.mergeSymbol(func);
+            NormalFuncFactor.addFunc(func);
         }
         String m = sc.nextLine();
         for (int i = 0; i < Integer.parseInt(m) * 3; i++) {
