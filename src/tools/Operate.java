@@ -156,6 +156,7 @@ public class Operate {
         }
         return sb.toString();
     }
+
     public static String addAtomicsString(ArrayList<AtomicElement> atoms) {
         StringBuilder sb = new StringBuilder();
         for (AtomicElement atom: atoms) {

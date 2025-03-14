@@ -168,7 +168,7 @@ public class SinCosFactor extends Factor {
             innerStr = extracted.getKey();
         }
         Matcher sinMatcher = sinRe.matcher(outerStr);
-        Matcher cosMatcher = cosRe.matcher(innerStr);
+        Matcher cosMatcher = cosRe.matcher(outerStr);
         if (sinMatcher.matches()) {
             return getDerivatives(sinMatcher, innerStr, false);
         } else if (cosMatcher.matches()) {
@@ -179,12 +179,12 @@ public class SinCosFactor extends Factor {
         return null;
     }
 
-    private ArrayList<AtomicElement> getDerivatives(Matcher matcher, String innerStr,Boolean isCos) {
+    private ArrayList<AtomicElement> getDerivatives(Matcher matcher, String inner, Boolean isCos) {
         ArrayList<AtomicElement> derivatives = new ArrayList<>();
         if (matcher.group(1) == null) {
             SinCosFactor newSinCosFactor = new SinCosFactor(funcNameFixedFactor());
             derivatives.addAll(newSinCosFactor.getAtomicElements());
-            Factor innerFactor = FactorFactory.getFactor(innerStr);
+            Factor innerFactor = FactorFactory.getFactor(inner);
             derivatives = Operate.mul(derivatives, innerFactor.derive());
             return derivatives;
         }
@@ -195,7 +195,9 @@ public class SinCosFactor extends Factor {
         }
         derivatives.add(new AtomicElement(BigInteger.valueOf(exponent), 0, 0, null));
         if (isCos) {
-            derivatives.add(new AtomicElement(BigInteger.valueOf(-1), 0, 0, null));
+            ArrayList<AtomicElement> tmp = new ArrayList<>();
+            tmp.add(new AtomicElement(BigInteger.valueOf(-1), 0, 0, null));
+            derivatives = Operate.mul(derivatives, tmp);
         }
         if (exponent > 1) {
             SinCosFactor newSinCosFactor = new SinCosFactor(expoFixedFactor(exponent - 1));
@@ -203,7 +205,7 @@ public class SinCosFactor extends Factor {
         }
         SinCosFactor newSinCosFactor = new SinCosFactor(funcNameFixedFactor());
         derivatives = Operate.mul(derivatives,newSinCosFactor.getAtomicElements());
-        Factor innerFactor = FactorFactory.getFactor(innerStr);
+        Factor innerFactor = FactorFactory.getFactor(inner);
         derivatives = Operate.mul(derivatives,innerFactor.derive());
         return derivatives;
     }

@@ -12,7 +12,7 @@ public class MainClass {
         String n = sc.nextLine();
         for (int i = 0; i < Integer.parseInt(n); i++) {
             String func = sc.nextLine();
-            NormalFuncFactor.addFunc(func);
+            NormalFuncFactor.addFunc(func.replaceAll("[ \\t]", ""));
         }
         String m = sc.nextLine();
         for (int i = 0; i < Integer.parseInt(m) * 3; i++) {
