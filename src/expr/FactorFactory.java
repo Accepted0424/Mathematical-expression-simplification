@@ -11,6 +11,7 @@ public class FactorFactory {
         Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?[+-]?(\\d+)?");
         Pattern recursiveFuncRe = Pattern.compile("[+-]?f\\{\\d+}\\(.*\\)");
         Pattern normalFuncRe = Pattern.compile("[+-]?([gh])\\((.*)\\)");
+        Pattern derivativeRe = Pattern.compile("dx\\((.*)\\)");
 
         if (constRe.matcher(s).matches()) {
             return new ConstFactor(s);
@@ -22,7 +23,9 @@ public class FactorFactory {
             return new RecursiveFuncFactor(s);
         } else if (normalFuncRe.matcher(s).matches()) {
             return new NormalFuncFactor(s);
-        }else {
+        } else if (derivativeRe.matcher(s).matches()) {
+            return new DerivativeFactor(s);
+        } else {
             // 匹配 ExprFactor
             // 加入嵌套括号之后匹配表达式因子需要特殊处理，不能直接使用正则表达式
             int start = 0;

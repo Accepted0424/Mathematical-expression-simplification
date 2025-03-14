@@ -10,7 +10,7 @@ import java.util.regex.Pattern;
 // f{1}(x) = sin(x)                     f{1}(x,y) = sin(x+y)
 // f{n}(x) = cos(x)*f{n-1} + x*f{n-2}   f{n}(x,y) = x*f{n-1} + y*f{n-2}
 
-public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertible {
+public class RecursiveFuncFactor extends Factor {
     // 一个表达式只包含0或1个递归函数，使用static变量存储递归函数的规则
     private static final Pattern ruleRe = Pattern.compile("f\\{(\\d+|n)}\\(([xy],?[xy]?)\\)=(.*)");
     private static final Pattern factorRe = Pattern.compile("[+-]?f\\{(\\d+|n)}\\((.*)\\)");
@@ -116,5 +116,10 @@ public class RecursiveFuncFactor extends Factor implements AtomicArrayConvertibl
             formalParamList.set(1, secondParam);
         }
         return result;
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        return null;
     }
 }

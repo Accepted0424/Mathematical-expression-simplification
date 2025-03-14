@@ -74,7 +74,7 @@ public class Expr implements AtomicArrayConvertible, Derivable {
     public ArrayList<AtomicElement> derive() {
         ArrayList<AtomicElement> derivatives = new ArrayList<>(terms.get(0).derive());
         for (int i = 1; i < terms.size(); i++) {
-            derivatives = Operate.add(derivatives, terms.get(i).getAtomicElements());
+            derivatives = Operate.add(derivatives, terms.get(i).derive());
         }
         return Operate.merge(derivatives);
     }

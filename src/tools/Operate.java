@@ -144,4 +144,29 @@ public class Operate {
         }
         return true;
     }
+
+    public static String mulAtomicsString(ArrayList<AtomicElement> atoms) {
+        StringBuilder sb = new StringBuilder();
+        for (AtomicElement atom: atoms) {
+            sb.append(atom.toString());
+            sb.append("*");
+        }
+        if (!sb.toString().isEmpty()) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+    public static String addAtomicsString(ArrayList<AtomicElement> atoms) {
+        StringBuilder sb = new StringBuilder();
+        for (AtomicElement atom: atoms) {
+            if (!atom.toString().isEmpty()) {
+                sb.append(atom.toString());
+                sb.append("+");
+            }
+        }
+        if (!sb.toString().isEmpty()) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
 }

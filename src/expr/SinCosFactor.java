@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SinCosFactor extends Factor implements Derivable{
+public class SinCosFactor extends Factor {
     // example: sin(x) cos(x) sin(x^2)^2 cos(x+1)^2 sin((x+1)*2)^2
     private static final Pattern sinRe = Pattern.compile("[+-]?sin\\^?[+-]?(\\d+)?");
     private static final Pattern cosRe = Pattern.compile("[+-]?cos\\^?[+-]?(\\d+)?");
@@ -155,13 +155,89 @@ public class SinCosFactor extends Factor implements Derivable{
 
     @Override
     public ArrayList<AtomicElement> derive() {
-        ArrayList<AtomicElement> derivatives = new ArrayList<>();
+
         AtomicElement atom = getAtomicElements().get(0);
         SinCosFactor sinCosFactor = atom.getTriFactors().get(0);
-        String newFactor = sinCosFactor.getFactor().replaceFirst("(sin).*", "cos");
-        newFactor = newFactor.replaceFirst("(cos).*", "sin");
-        SinCosFactor newSinCosFactor = new SinCosFactor(newFactor);
-        AtomicElement derivative = new AtomicElement(atom.getCoe(), atom.getXPow(), atom.getYPow(), );
+        Map.Entry<String, String> extracted = Operate.getStrInOutermostBracket(getFactor());
+        String outerStr = "";
+        if (extracted != null) {
+            outerStr = extracted.getValue();
+        }
+        String innerStr = "";
+        if (extracted != null) {
+            innerStr = extracted.getKey();
+        }
+        Matcher sinMatcher = sinRe.matcher(outerStr);
+        Matcher cosMatcher = cosRe.matcher(innerStr);
+        if (sinMatcher.matches()) {
+            return getDerivatives(sinMatcher, innerStr, false);
+        } else if (cosMatcher.matches()) {
+            return getDerivatives(cosMatcher, innerStr, true);
+        } else {
+            System.err.println("Invalid SinCosFactor: " + getFactor());
+        }
+        return null;
+    }
+
+    private ArrayList<AtomicElement> getDerivatives(Matcher matcher, String innerStr,Boolean isCos) {
+        ArrayList<AtomicElement> derivatives = new ArrayList<>();
+        if (matcher.group(1) == null) {
+            SinCosFactor newSinCosFactor = new SinCosFactor(funcNameFixedFactor());
+            derivatives.addAll(newSinCosFactor.getAtomicElements());
+            Factor innerFactor = FactorFactory.getFactor(innerStr);
+            derivatives = Operate.mul(derivatives, innerFactor.derive());
+            return derivatives;
+        }
+        int exponent = Integer.parseInt(matcher.group(1));
+        if (exponent == 0) {
+            derivatives.add(new AtomicElement(BigInteger.ZERO, 0, 0, null));
+            return derivatives;
+        }
+        derivatives.add(new AtomicElement(BigInteger.valueOf(exponent), 0, 0, null));
+        if (isCos) {
+            derivatives.add(new AtomicElement(BigInteger.valueOf(-1), 0, 0, null));
+        }
+        if (exponent > 1) {
+            SinCosFactor newSinCosFactor = new SinCosFactor(expoFixedFactor(exponent - 1));
+            derivatives = Operate.mul(derivatives, newSinCosFactor.getAtomicElements());
+        }
+        SinCosFactor newSinCosFactor = new SinCosFactor(funcNameFixedFactor());
+        derivatives = Operate.mul(derivatives,newSinCosFactor.getAtomicElements());
+        Factor innerFactor = FactorFactory.getFactor(innerStr);
+        derivatives = Operate.mul(derivatives,innerFactor.derive());
+        return derivatives;
+    }
+
+    private String expoFixedFactor(int exponent) {
+        Pattern pt = Pattern.compile("([+-]?(sin|cos)\\(.*\\)\\^?)[+-]?(\\d+)?");
+        Matcher m = pt.matcher(getFactor());
+        if (m.matches()) {
+            String withoutExponent = m.group(1);
+            String exponentStr = String.valueOf(exponent);
+            if (exponent > 0) {
+                return withoutExponent + exponentStr;
+            } else {
+                return withoutExponent + exponentStr;
+            }
+        } else {
+            System.err.println("Invalid SinCosFactor: " + getFactor());
+            return null;
+        }
+    }
+
+    private String funcNameFixedFactor() {
+        Pattern pt = Pattern.compile("[+-]?(sin|cos)(\\(.*\\))\\^?[+-]?(\\d+)?");
+        Matcher m = pt.matcher(getFactor());
+        if (m.matches()) {
+            String funcName = m.group(1);
+            if (funcName.equals("sin")) {
+                return "cos" + m.group(2);
+            } else if (funcName.equals("cos")) {
+                return "sin" + m.group(2);
+            }
+        } else {
+            System.err.println("Invalid SinCosFactor: " + getFactor());
+        }
         return null;
     }
 }

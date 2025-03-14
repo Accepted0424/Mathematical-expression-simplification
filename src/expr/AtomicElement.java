@@ -203,5 +203,4 @@ public class AtomicElement {
         }
         return triString.toString();
     }
-
 }

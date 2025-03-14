@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ExprFactor extends Factor implements Derivable {
+public class ExprFactor extends Factor {
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
 
@@ -69,8 +69,47 @@ public class ExprFactor extends Factor implements Derivable {
 
     @Override
     public ArrayList<AtomicElement> derive() {
-        Expr expr = new Expr(getFactor());
-        return expr.derive();
+        // (x^2+1)^2 2*(x^2+1)*2*x
+        ArrayList<AtomicElement> derivatives = new ArrayList<>();
+        Pattern p = Pattern.compile("[+-]?\\((.*)\\)\\^?\\+?(\\d+)?");
+        Matcher m = p.matcher(getFactor());
+        if (m.matches()) {
+            if (m.group(2) == null) {
+                Expr innerExpr = new Expr(m.group(1));
+                derivatives.addAll(innerExpr.derive());
+                return derivatives;
+            }
+            int exponent = Integer.parseInt(m.group(2));
+            if (exponent == 0) {
+                derivatives.add(new AtomicElement(BigInteger.ZERO, 0,0,null));
+                return derivatives;
+            } else if (exponent == 1) {
+                Expr innerExpr = new Expr(m.group(1));
+                derivatives.addAll(innerExpr.derive());
+                return derivatives;
+            } else {
+                derivatives.add(new AtomicElement(BigInteger.valueOf(exponent), 0,0,null));
+                Expr innerExpr = new Expr(m.group(1));
+                derivatives = Operate.mul(derivatives, innerExpr.derive());
+                Expr descend = new Expr(expoFixedFactor(exponent - 1));
+                derivatives = Operate.mul(derivatives, descend.getAtomicElements());
+                return derivatives;
+            }
+        } else {
+            System.err.println("Error in ExprFactor: Invalid factor format in " + getFactor());
+            return null;
+        }
+    }
+
+    private String expoFixedFactor(int expo) {
+        Pattern p = Pattern.compile("[+-]?(\\(.*\\)\\^?)\\+?(\\d+)?");
+        Matcher m = p.matcher(getFactor());
+        if (m.matches()) {
+            return m.group(1) + expo;
+        } else {
+            System.err.println("Error in ExprFactor: Invalid factor format in " + getFactor());
+            return null;
+        }
     }
 
     @Override

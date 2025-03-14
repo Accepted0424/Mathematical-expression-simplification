@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class PowerFactor extends Factor implements Derivable {
+public class PowerFactor extends Factor {
     //带x的均为变量因子
     //example: x x^2
     private static final String patternTerm = "([+-]{0,2})([xy])\\^?\\+?(\\d+)?";
@@ -48,6 +48,7 @@ public class PowerFactor extends Factor implements Derivable {
         BigInteger pow = BigInteger.valueOf(atom.getXPow());
         BigInteger coe = atom.getCoe().multiply(pow);
         AtomicElement derivative = new AtomicElement(coe, atom.getXPow() - 1, 0, null);
-        return null;
+        derivatives.add(derivative);
+        return derivatives;
     }
 }

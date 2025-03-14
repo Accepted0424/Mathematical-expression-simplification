@@ -1,11 +1,10 @@
 package expr;
 
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public abstract class Factor implements AtomicArrayConvertible, Derivable {
-    private final String factor;
+    private String factor;
     private int triType = 0;
     private Pattern sinRe = Pattern.compile("[+-]?sin\\(.*\\)\\^?[+-]?(\\d+)?");
     private Pattern cosRe = Pattern.compile("[+-]?cos\\(.*\\)\\^?[+-]?(\\d+)?");
@@ -19,6 +18,10 @@ public abstract class Factor implements AtomicArrayConvertible, Derivable {
 
     public String getFactor() {
         return factor;
+    }
+
+    public void setFactor(String factor) {
+        this.factor = factor;
     }
 
     /**

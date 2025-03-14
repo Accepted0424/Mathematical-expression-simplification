@@ -6,7 +6,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class NormalFuncFactor extends Factor implements AtomicArrayConvertible {
+public class NormalFuncFactor extends Factor {
     private static final Pattern funcRe = Pattern.compile("([gh])\\(([xy],?[xy]?)\\)=(.*)");
     private static final Pattern factorRe = Pattern.compile("[+-]?([gh])\\((.*)\\)");
     private static final HashMap<String, String> funcMap = new HashMap<>();
@@ -95,4 +95,22 @@ public class NormalFuncFactor extends Factor implements AtomicArrayConvertible {
         return result;
     }
 
+    @Override
+    public String toString() {
+        ArrayList<AtomicElement> atoms = getAtomicElements();
+        StringBuilder sb = new StringBuilder();
+        for (AtomicElement atom: atoms) {
+            sb.append(atom.toString()).append("+");
+        }
+        if (sb.length() > 0) {
+            sb.deleteCharAt(sb.length() - 1);
+        }
+        return sb.toString();
+    }
+
+    @Override
+    public ArrayList<AtomicElement> derive() {
+        Expr expr = new Expr(toString());
+        return expr.derive();
+    }
 }

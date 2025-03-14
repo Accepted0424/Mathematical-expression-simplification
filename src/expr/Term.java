@@ -85,7 +85,7 @@ public class Term implements AtomicArrayConvertible, Derivable {
             ArrayList<AtomicElement> derivative = factors.get(i).derive();
             for (int j = 0; j < factors.size(); j++) {
                 if (i != j) {
-                    derivative.addAll(Operate.mul(derivative, factors.get(j).getAtomicElements()));
+                    derivative = Operate.mul(derivative, factors.get(j).getAtomicElements());
                 }
             }
             derivatives.addAll(derivative);
