@@ -16,6 +16,8 @@ public class SinCosFactor extends Factor {
     private ArrayList<AtomicElement> innerMonos = new ArrayList<>();
     private int pow = 1;
     private String cachedString = null;
+    private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
+    private ArrayList<AtomicElement> cachedDerivatives = new ArrayList<>();
 
     public SinCosFactor(String factor) {
         super(factor);
@@ -85,6 +87,9 @@ public class SinCosFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
+        if (!cachedAtoms.isEmpty()) {
+            return cachedAtoms;
+        }
         ArrayList<AtomicElement> atoms = new ArrayList<>();
         Map.Entry<String, String> extracted = Operate.getStrInOutermostBracket(getFactor());
         if (extracted != null) {
@@ -110,6 +115,7 @@ public class SinCosFactor extends Factor {
                     atoms.clear();
                     atoms.add(new AtomicElement(BigInteger.ONE, 0, 0, null));
                 }
+                cachedAtoms = atoms;
                 return atoms;
             } else {
                 System.err.println("Invalid SinCosFactor: " + getFactor());
@@ -155,9 +161,9 @@ public class SinCosFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> derive() {
-
-        AtomicElement atom = getAtomicElements().get(0);
-        SinCosFactor sinCosFactor = atom.getTriFactors().get(0);
+        if (!cachedDerivatives.isEmpty()) {
+            return cachedDerivatives;
+        }
         Map.Entry<String, String> extracted = Operate.getStrInOutermostBracket(getFactor());
         String outerStr = "";
         if (extracted != null) {
@@ -170,9 +176,11 @@ public class SinCosFactor extends Factor {
         Matcher sinMatcher = sinRe.matcher(outerStr);
         Matcher cosMatcher = cosRe.matcher(outerStr);
         if (sinMatcher.matches()) {
-            return getDerivatives(sinMatcher, innerStr, false);
+            cachedDerivatives = getDerivatives(sinMatcher, innerStr, false);
+            return cachedDerivatives;
         } else if (cosMatcher.matches()) {
-            return getDerivatives(cosMatcher, innerStr, true);
+            cachedDerivatives = getDerivatives(cosMatcher, innerStr, true);
+            return cachedDerivatives;
         } else {
             System.err.println("Invalid SinCosFactor: " + getFactor());
         }
@@ -216,11 +224,7 @@ public class SinCosFactor extends Factor {
         if (m.matches()) {
             String withoutExponent = m.group(1);
             String exponentStr = String.valueOf(exponent);
-            if (exponent > 0) {
-                return withoutExponent + exponentStr;
-            } else {
-                return withoutExponent + exponentStr;
-            }
+            return withoutExponent + exponentStr;
         } else {
             System.err.println("Invalid SinCosFactor: " + getFactor());
             return null;

@@ -88,6 +88,11 @@ public class Term implements AtomicArrayConvertible, Derivable {
                     derivative = Operate.mul(derivative, factors.get(j).getAtomicElements());
                 }
             }
+            if (isNegative) {
+                for (AtomicElement atom : derivative) {
+                    atom.inverseCoe();
+                }
+            }
             derivatives.addAll(derivative);
         }
         return derivatives;

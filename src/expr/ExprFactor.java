@@ -10,9 +10,10 @@ import java.util.regex.Pattern;
 public class ExprFactor extends Factor {
     //带括号的均为表达式因子
     //example: (x+2) (x+1)^2 (x*2+x^2)
-
     private static final String patternTerm = "[+-]?\\^?\\+?(\\d+)?"; //捕获括号内内容和指数
     private static final Pattern re = Pattern.compile(patternTerm);
+    private ArrayList<AtomicElement> cachedAtoms = new ArrayList();
+    private ArrayList<AtomicElement> cachedDerivatives = new ArrayList();
 
     public ExprFactor(String factor) {
         super(factor);
@@ -20,7 +21,9 @@ public class ExprFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
-
+        if (!cachedAtoms.isEmpty()) {
+            return cachedAtoms;
+        }
         String s = getFactor();
         int start = 0;
         int inBracket = 0;
@@ -59,7 +62,8 @@ public class ExprFactor extends Factor {
                             atoms.add(new AtomicElement(BigInteger.ONE, 0,0,null));
                         }
                     }
-                    return atoms;
+                    cachedAtoms = atoms;
+                    return cachedAtoms;
                 }
             }
         }
@@ -69,6 +73,9 @@ public class ExprFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> derive() {
+        if (!cachedDerivatives.isEmpty()) {
+            return cachedDerivatives;
+        }
         // (x^2+1)^2 2*(x^2+1)*2*x
         ArrayList<AtomicElement> derivatives = new ArrayList<>();
         Pattern p = Pattern.compile("[+-]?\\((.*)\\)\\^?\\+?(\\d+)?");
@@ -77,6 +84,7 @@ public class ExprFactor extends Factor {
             if (m.group(2) == null) {
                 Expr innerExpr = new Expr(m.group(1));
                 derivatives.addAll(innerExpr.derive());
+                cachedDerivatives = derivatives;
                 return derivatives;
             }
             int exponent = Integer.parseInt(m.group(2));
@@ -86,6 +94,7 @@ public class ExprFactor extends Factor {
             } else if (exponent == 1) {
                 Expr innerExpr = new Expr(m.group(1));
                 derivatives.addAll(innerExpr.derive());
+                cachedDerivatives = derivatives;
                 return derivatives;
             } else {
                 derivatives.add(new AtomicElement(BigInteger.valueOf(exponent), 0,0,null));
@@ -93,6 +102,7 @@ public class ExprFactor extends Factor {
                 derivatives = Operate.mul(derivatives, innerExpr.derive());
                 Expr descend = new Expr(expoFixedFactor(exponent - 1));
                 derivatives = Operate.mul(derivatives, descend.getAtomicElements());
+                cachedDerivatives = derivatives;
                 return derivatives;
             }
         } else {

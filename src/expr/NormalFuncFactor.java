@@ -12,6 +12,7 @@ public class NormalFuncFactor extends Factor {
     private static final HashMap<String, String> funcMap = new HashMap<>();
     private static final HashMap<String, ArrayList<String>> formalParamMap = new HashMap<>();
     private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
+    private ArrayList<AtomicElement> cachedDerivatives = new ArrayList<>();
 
     public NormalFuncFactor(String factor) {
         super(factor);
@@ -110,7 +111,11 @@ public class NormalFuncFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> derive() {
+        if (!cachedDerivatives.isEmpty()) {
+            return cachedDerivatives;
+        }
         Expr expr = new Expr(toString());
-        return expr.derive();
+        cachedDerivatives = expr.derive();
+        return cachedDerivatives;
     }
 }

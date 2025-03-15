@@ -1,5 +1,7 @@
 package expr;
 
+import tools.Operate;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -17,6 +19,7 @@ public class RecursiveFuncFactor extends Factor {
     private static final Map<String, String> funcRule = new HashMap<>();
     private static ArrayList<String> formalParamList = new ArrayList<>();
     private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
+    private ArrayList<AtomicElement> cachedDerivatives = new ArrayList<>();
 
     public RecursiveFuncFactor(String func) {
         super(func);
@@ -120,6 +123,11 @@ public class RecursiveFuncFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> derive() {
-        return null;
+        if (!cachedDerivatives.isEmpty()) {
+            return cachedDerivatives;
+        }
+        Expr expr = new Expr(Operate.addAtomicsString(getAtomicElements()));
+        cachedDerivatives = expr.derive();
+        return cachedDerivatives;
     }
 }

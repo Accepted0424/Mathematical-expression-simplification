@@ -10,6 +10,8 @@ public class PowerFactor extends Factor {
     //example: x x^2
     private static final String patternTerm = "([+-]{0,2})([xy])\\^?\\+?(\\d+)?";
     private static final Pattern re = Pattern.compile(patternTerm);
+    private ArrayList<AtomicElement> cachedAtoms = new ArrayList();
+    private ArrayList<AtomicElement> cachedDerivatives = new ArrayList();
 
     public PowerFactor(String factor) {
         super(factor);
@@ -17,6 +19,9 @@ public class PowerFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> getAtomicElements() {
+        if (!cachedAtoms.isEmpty()) {
+            return cachedAtoms;
+        }
         ArrayList<AtomicElement> atoms = new ArrayList<>();
         Matcher mc = re.matcher(getFactor());
         if (mc.matches()) {
@@ -34,6 +39,7 @@ public class PowerFactor extends Factor {
             } else if (mc.group(2).equals("y")) {
                 atoms.add(new AtomicElement(coe, 0, pow, null));
             }
+            cachedAtoms = atoms;
             return atoms;
         } else {
             System.err.println("Invalid PowerFactor: " + getFactor());
@@ -43,12 +49,16 @@ public class PowerFactor extends Factor {
 
     @Override
     public ArrayList<AtomicElement> derive() {
+        if (!cachedDerivatives.isEmpty()) {
+            return cachedDerivatives;
+        }
         ArrayList<AtomicElement> derivatives = new ArrayList<>();
         AtomicElement atom = getAtomicElements().get(0);
         BigInteger pow = BigInteger.valueOf(atom.getXPow());
         BigInteger coe = atom.getCoe().multiply(pow);
         AtomicElement derivative = new AtomicElement(coe, atom.getXPow() - 1, 0, null);
         derivatives.add(derivative);
+        cachedDerivatives = derivatives;
         return derivatives;
     }
 }
