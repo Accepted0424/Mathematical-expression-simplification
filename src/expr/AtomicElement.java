@@ -45,20 +45,6 @@ public class AtomicElement {
         return triFactors;
     }
 
-    // 便于作为map的key
-    public String getTriFactorsStr() {
-        if (triFactors.isEmpty()) {
-            return "";
-        }
-        StringBuilder sb = new StringBuilder();
-        for (SinCosFactor sinCosFactor : triFactors) {
-            sb.append(sinCosFactor);
-            sb.append("*");
-        }
-        sb.deleteCharAt(sb.length() - 1);
-        return sb.toString();
-    }
-
     @Override
     public boolean equals(Object x) {
         if (x == null) {
@@ -173,7 +159,7 @@ public class AtomicElement {
         return coeString;
     }
 
-    private String getTriString() {
+    public String getTriString() {
         StringBuilder triString = new StringBuilder();
         if (!triFactors.isEmpty()) {
             HashMap<String, Integer> map = new HashMap<>();

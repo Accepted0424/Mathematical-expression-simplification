@@ -63,7 +63,7 @@ public class Operate {
     private static AtomicElement simpleAdd(AtomicElement left, AtomicElement right) {
         if (left.getXPow() == right.getXPow() &&
             left.getYPow() == right.getYPow() &&
-            left.getTriFactorsStr().equals(right.getTriFactorsStr())) {
+            left.getTriString().equals(right.getTriString())) {
             return new AtomicElement(left.getCoe().add(right.getCoe()),
                     left.getXPow(), left.getYPow(), left.getTriFactors());
         } else if (left.getXPow() == right.getXPow() && left.getYPow() == right.getYPow()) {
@@ -79,7 +79,7 @@ public class Operate {
     public static ArrayList<AtomicElement> merge(ArrayList<AtomicElement> atoms) {
         HashMap<String, AtomicElement> map = new HashMap<>();
         for (AtomicElement atom: atoms) {
-            String key = atom.getXPow() + "_" + atom.getTriFactorsStr();
+            String key = atom.getXPow() + "_" + atom.getTriString();
             if (map.containsKey(key)) {
                 AtomicElement merged = simpleAdd(map.get(key), atom);
                 if (merged != null) {
