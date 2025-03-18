@@ -194,6 +194,11 @@ public class SinCosFactor extends Factor {
             derivatives.addAll(newSinCosFactor.getAtomicElements());
             Factor innerFactor = FactorFactory.getFactor(inner);
             derivatives = Operate.mul(derivatives, innerFactor.derive());
+            if (isCos) {
+                ArrayList<AtomicElement> tmp = new ArrayList<>();
+                tmp.add(new AtomicElement(BigInteger.valueOf(-1), 0, 0, null));
+                derivatives = Operate.mul(derivatives, tmp);
+            }
             return derivatives;
         }
         int exponent = Integer.parseInt(matcher.group(1));
