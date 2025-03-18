@@ -11,7 +11,7 @@ public class Expr implements AtomicArrayConvertible, Derivable {
     private ArrayList<AtomicElement> cachedAtoms = new ArrayList<>();
 
     public Expr(String expr) {
-        this.expr = expr;
+        this.expr = Operate.mergeSymbol(expr);
         terms = extractTerms();
     }
 
